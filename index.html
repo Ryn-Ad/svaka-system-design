@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battle Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Root ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #0b0c10;
+  --bg-surface:  #10121a;
+  --bg-raised:   #171923;
+  --bg-input:    #1e2130;
+  --bg-hover:    #252a3a;
+
+  --border:      #252a3a;
+  --border-mid:  #2e3450;
+  --border-hi:   #3d4468;
+
+  --text-prime:  #e2e8f4;
+  --text-mid:    #8892a8;
+  --text-dim:    #4a5270;
+
+  --amber:       #e8a020;
+  --amber-dim:   #7a4e08;
+  --amber-glow:  rgba(232,160,32,.15);
+
+  --red:    #e05050; --red-dim:    #5c1a1a; --red-bg:    rgba(224,80,80,.10);
+  --green:  #52c878; --green-dim:  #1a4a28; --green-bg:  rgba(82,200,120,.10);
+  --blue:   #4a9eff; --blue-dim:   #1a3360; --blue-bg:   rgba(74,158,255,.10);
+  --gold:   #f0c040; --gold-dim:   #5a4010; --gold-bg:   rgba(240,192,64,.10);
+  --teal:   #30d4a0; --teal-dim:   #0c4434; --teal-bg:   rgba(48,212,160,.10);
+  --pink:   #e070b8; --pink-dim:   #4e1840; --pink-bg:   rgba(224,112,184,.10);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --font-ui:   'Rajdhani', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-prime);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Subtle scanline texture ──────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.06) 2px,
+    rgba(0,0,0,.06) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.app-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.app-title {
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-prime);
+  line-height: 1;
+}
+
+.app-title span {
+  color: var(--amber);
+}
+
+.app-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.char-badge {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: 5px 14px;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-sm);
+  color: var(--text-mid);
+  background: var(--bg-surface);
+  text-transform: uppercase;
+  transition: all .2s;
+}
+
+.char-badge.loaded {
+  border-color: var(--amber-dim);
+  color: var(--amber);
+  background: var(--amber-glow);
+}
+
+/* ── Tab Navigation ───────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  position: relative;
+  padding: 10px 22px 11px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+
+.tab-btn:hover { color: var(--text-prime); }
+
+.tab-btn.active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn .15s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── HUD Card ─────────────────────────────────────────────── */
+.card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+/* Corner bracket decorations — the "unforgettable" detail */
+.card::before, .card::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--amber);
+  border-style: solid;
+  opacity: .5;
+}
+.card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: var(--radius-lg) 0 0 0; }
+.card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 var(--radius-lg) 0; }
+
+/* ── Section Label ────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Form Elements ────────────────────────────────────────── */
+label.field-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-prime);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .15s, background .15s;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+  border-color: var(--amber);
+  background: var(--bg-hover);
+}
+
+select { cursor: pointer; }
+select option { background: var(--bg-raised); }
+
+/* Level slider */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.slider-row .slider-val {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--amber);
+  min-width: 40px;
+  text-align: right;
+  line-height: 1;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 3px;
+  background: var(--border-mid);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 2px solid var(--bg-base);
+  box-shadow: 0 0 8px var(--amber-glow);
+  transition: transform .1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+/* ── Allo Bar ─────────────────────────────────────────────── */
+.allo-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.allo-meta span {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--text-mid);
+}
+
+.allo-meta .allo-count { color: var(--text-prime); }
+.allo-meta .allo-count.over { color: var(--red); }
+
+.allo-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.allo-fill {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 2px;
+  transition: width .25s cubic-bezier(.4,0,.2,1);
+}
+
+.allo-fill.over { background: var(--red); }
+
+/* ── 6-Stat Grid ──────────────────────────────────────────── */
+.stat-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat-cell {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 8px 8px;
+  text-align: center;
+  transition: border-color .15s;
+}
+
+.stat-cell:hover { border-color: var(--border-hi); }
+
+.stat-cell .sc-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-cell .sc-val {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Stat colors */
+.sc-str .sc-label, .sc-str .sc-val { color: var(--red); }
+.sc-vit .sc-label, .sc-vit .sc-val { color: var(--green); }
+.sc-int .sc-label, .sc-int .sc-val { color: var(--blue); }
+.sc-dex .sc-label, .sc-dex .sc-val { color: var(--gold); }
+.sc-agi .sc-label, .sc-agi .sc-val { color: var(--teal); }
+.sc-luk .sc-label, .sc-luk .sc-val { color: var(--pink); }
+
+.sc-str { border-top: 2px solid var(--red-dim); background: var(--red-bg); }
+.sc-vit { border-top: 2px solid var(--green-dim); background: var(--green-bg); }
+.sc-int { border-top: 2px solid var(--blue-dim); background: var(--blue-bg); }
+.sc-dex { border-top: 2px solid var(--gold-dim); background: var(--gold-bg); }
+.sc-agi { border-top: 2px solid var(--teal-dim); background: var(--teal-bg); }
+.sc-luk { border-top: 2px solid var(--pink-dim); background: var(--pink-bg); }
+
+/* Inline stat inputs (transparent, colored) */
+.stat-cell input[type="number"] {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 0;
+  width: 100%;
+}
+
+.sc-str input { color: var(--red); }
+.sc-vit input { color: var(--green); }
+.sc-int input { color: var(--blue); }
+.sc-dex input { color: var(--gold); }
+.sc-agi input { color: var(--teal); }
+.sc-luk input { color: var(--pink); }
+
+/* ── Sub-stat Grid ────────────────────────────────────────── */
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+.sub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color .1s;
+}
+
+.sub-row:hover { border-color: var(--border-hi); }
+
+.sub-row .sn {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.sub-row .sv {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-prime);
+}
+
+.delta {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  margin-left: 5px;
+}
+.delta.pos { color: var(--green); }
+.delta.neg { color: var(--red); }
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn {
+  padding: 8px 18px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hi);
+  color: var(--text-prime);
+}
+
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  background: var(--amber-glow);
+  border-color: var(--amber-dim);
+  color: var(--amber);
+}
+
+.btn-primary:hover {
+  background: rgba(232,160,32,.25);
+  border-color: var(--amber);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+}
+
+/* File import button */
+.btn-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.btn-file input { display: none; }
+
+/* ── Checkbox toggle ──────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.toggle-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  transition: color .15s;
+}
+
+.toggle-row label:hover { color: var(--text-prime); }
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-mid);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  transition: all .15s;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: 2px solid var(--bg-base);
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+
+/* ── Element Pills ────────────────────────────────────────── */
+.elem-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.elem-Fire    { background: rgba(255,100,40,.12); color: #ff6428; border-color: rgba(255,100,40,.3); }
+.elem-Water   { background: rgba(40,140,255,.12); color: #4a9eff; border-color: rgba(40,140,255,.3); }
+.elem-Earth   { background: rgba(140,100,40,.12); color: #b07830; border-color: rgba(140,100,40,.3); }
+.elem-Wind    { background: rgba(80,210,160,.12); color: #30d4a0; border-color: rgba(80,210,160,.3); }
+.elem-Thunder { background: rgba(255,220,40,.12); color: #f0c040; border-color: rgba(255,220,40,.3); }
+.elem-Light   { background: rgba(255,245,180,.08); color: #f5f0a8; border-color: rgba(255,245,180,.2); }
+.elem-Dark    { background: rgba(140,60,220,.12); color: #a060e0; border-color: rgba(140,60,220,.3); }
+.elem-None    { background: rgba(100,100,120,.10); color: var(--text-dim); border-color: var(--border); }
+
+/* ── VS Section (Arena) ───────────────────────────────────── */
+.vs-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.vs-side {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.vs-side .vs-name {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-prime);
+  margin-bottom: 8px;
+}
+
+.vs-side .vs-stat {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 3px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+
+.vs-side .vs-stat span {
+  font-family: var(--font-mono);
+  color: var(--text-prime);
+  font-size: 13px;
+}
+
+.vs-divider {
+  font-family: var(--font-ui);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .04em;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(224,80,80,.4);
+}
+
+/* ── Sim Result Boxes ─────────────────────────────────────── */
+.sim-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.sim-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  transition: border-color .2s;
+}
+
+.sim-box .sim-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.sim-box .sim-dmg {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: var(--text-prime);
+  transition: color .2s;
+}
+
+.sim-box .sim-unit {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.sim-box .sim-htk {
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text-mid);
+}
+
+.sim-box.win-box {
+  border-color: var(--green-dim);
+  background: var(--green-bg);
+}
+.sim-box.win-box .sim-dmg { color: var(--green); }
+.sim-box.win-box .sim-htk { color: var(--green); }
+
+.sim-box.lose-box {
+  border-color: var(--red-dim);
+  background: var(--red-bg);
+}
+
+/* ── Verdict Banner ───────────────────────────────────────── */
+.verdict {
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-align: center;
+  border: 1px solid;
+}
+
+.verdict.win  { background: var(--green-bg); border-color: var(--green-dim); color: var(--green); }
+.verdict.lose { background: var(--red-bg);   border-color: var(--red-dim);   color: var(--red); }
+.verdict.tie  { background: rgba(100,100,120,.08); border-color: var(--border); color: var(--text-mid); }
+
+/* ── Enemy Input Grid ─────────────────────────────────────── */
+.enemy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ── Weapon BA Highlight ──────────────────────────────────── */
+.ba-highlight {
+  background: var(--amber-glow);
+  border: 1px solid var(--amber-dim);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.ba-highlight .ba-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  margin-bottom: 6px;
+}
+
+.ba-highlight input[type="number"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--amber-dim);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--amber);
+  padding: 0 2px;
+  width: 100%;
+}
+
+.ba-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+/* ── Formula Config Rows ──────────────────────────────────── */
+.cfg-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cfg-row:last-child { border-bottom: none; }
+
+.cfg-row .cfg-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  letter-spacing: .02em;
+}
+
+.cfg-row input[type="number"] {
+  width: 100px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 5px 8px;
+  flex-shrink: 0;
+}
+
+/* ── Import Drop Zone ─────────────────────────────────────── */
+.drop-zone {
+  border: 1px dashed var(--border-hi);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  margin-bottom: 16px;
+}
+
+.drop-zone:hover {
+  border-color: var(--amber);
+  background: var(--amber-glow);
+}
+
+.drop-zone input { display: none; }
+
+.drop-zone .dz-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: .5;
+}
+
+.drop-zone .dz-title {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--text-prime);
+  margin-bottom: 4px;
+}
+
+.drop-zone .dz-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ── Utility row / col ────────────────────────────────────── */
+.row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 14px; }
+.row:last-child { margin-bottom: 0; }
+.col { flex: 1; min-width: 0; }
+
+/* ── Divider ──────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 18px 0;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-raised);
+  border: 1px solid var(--amber-dim);
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: var(--amber);
+  z-index: 1000;
+  display: none;
+  animation: slideUp .2s ease;
+}
+
+@keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div>
+      <div class="app-title">Battle <span>Calculator</span></div>
+      <div class="app-subtitle">Standalone Design Tool &nbsp;·&nbsp; No Unity Required</div>
+    </div>
+    <div id="char-badge" class="char-badge">No Character</div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="setTab(0)">Character</button>
+    <button class="tab-btn" onclick="setTab(1)">Weapon</button>
+    <button class="tab-btn" onclick="setTab(2)">Arena</button>
+    <button class="tab-btn" onclick="setTab(3)">Settings</button>
+  </nav>
+
+  <!-- ── TAB 0 : CHARACTER ── -->
+  <div id="panel-0" class="panel active">
+
+    <div class="card">
+      <div class="section-label">Level</div>
+      <div class="slider-row">
+        <input type="range" id="lvl" min="1" max="99" value="1" oninput="onLvl(this.value)">
+        <div class="slider-val" id="lvl-out">1</div>
+      </div>
+
+      <div class="section-label">Allo Points</div>
+      <div class="allo-meta">
+        <span>Points Available</span>
+        <span class="allo-count" id="allo-info">0 / 0</span>
+      </div>
+      <div class="allo-bar"><div class="allo-fill" id="allo-fill" style="width:0%"></div></div>
+
+      <div class="stat-grid-6">
+        <div class="stat-cell sc-str">
+          <div class="sc-label">STR</div>
+          <input type="number" id="a-str" value="0" min="0" oninput="calcAll()">
+        </div>
+        <div class="stat-cell sc-vit">
+          <div class="sc-label">VIT</div>
+          <input type="number" id="a-vit" value="0" min="0" oninput="calcAll()">
+        </div>
+        <div class="stat-cell sc-int">
+          <div class="sc-label">INT</div>
+          <input type="number" id="a-int" value="0" min="0" oninput="calcAll()">
+        </div>
+        <div class="stat-cell sc-dex">
+          <div class="sc-label">DEX</div>
+          <input type="number" id="a-dex" value="0" min="0" oninput="calcAll()">
+        </div>
+        <div class="stat-cell sc-agi">
+          <div class="sc-label">AGI</div>
+          <input type="number" id="a-agi" value="0" min="0" oninput="calcAll()">
+        </div>
+        <div class="stat-cell sc-luk">
+          <div class="sc-label">LUK</div>
+          <input type="number" id="a-luk" value="0" min="0" oninput="calcAll()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Final Main Stats</div>
+      <div class="stat-grid-6">
+        <div class="stat-cell sc-str"><div class="sc-label">STR</div><div class="sc-val" id="ms-str">—</div></div>
+        <div class="stat-cell sc-vit"><div class="sc-label">VIT</div><div class="sc-val" id="ms-vit">—</div></div>
+        <div class="stat-cell sc-int"><div class="sc-label">INT</div><div class="sc-val" id="ms-int">—</div></div>
+        <div class="stat-cell sc-dex"><div class="sc-label">DEX</div><div class="sc-val" id="ms-dex">—</div></div>
+        <div class="stat-cell sc-agi"><div class="sc-label">AGI</div><div class="sc-val" id="ms-agi">—</div></div>
+        <div class="stat-cell sc-luk"><div class="sc-label">LUK</div><div class="sc-val" id="ms-luk">—</div></div>
+      </div>
+
+      <div class="section-label" style="margin-top:18px">Derived Sub-Attributes</div>
+      <div class="sub-grid" id="sub-out"></div>
+    </div>
+  </div>
+
+  <!-- ── TAB 1 : WEAPON ── -->
+  <div id="panel-1" class="panel">
+    <div class="card">
+      <div class="section-label">Workshop — Weapon Concept</div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Weapon Name</label>
+          <input type="text" id="w-name" value="Test Weapon" oninput="calcAll()">
+        </div>
+        <div class="col">
+          <label class="field-label">Element</label>
+          <select id="w-elem" onchange="updateElemBadge();calcAll()">
+            <option>Fire</option><option>Water</option><option>Earth</option>
+            <option>Wind</option><option>Thunder</option><option>Light</option>
+            <option>Dark</option><option>None</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="elem-badge-row" style="margin-bottom:16px"></div>
+
+      <div class="ba-highlight">
+        <div class="ba-label">BA Bonus — Primary Weapon Damage</div>
+        <input type="number" id="w-ba" value="0" step="0.5" oninput="calcAll()" placeholder="0">
+        <div class="ba-hint">Characters never gain BA from leveling. This weapon field is the sole source of BA growth.</div>
+      </div>
+
+      <div class="section-label">Primary Stat Bonuses</div>
+      <div class="stat-grid-6">
+        <div class="stat-cell sc-str"><div class="sc-label">STR</div><input type="number" id="w-str" value="0" oninput="calcAll()"></div>
+        <div class="stat-cell sc-vit"><div class="sc-label">VIT</div><input type="number" id="w-vit" value="0" oninput="calcAll()"></div>
+        <div class="stat-cell sc-int"><div class="sc-label">INT</div><input type="number" id="w-int" value="0" oninput="calcAll()"></div>
+        <div class="stat-cell sc-dex"><div class="sc-label">DEX</div><input type="number" id="w-dex" value="0" oninput="calcAll()"></div>
+        <div class="stat-cell sc-agi"><div class="sc-label">AGI</div><input type="number" id="w-agi" value="0" oninput="calcAll()"></div>
+        <div class="stat-cell sc-luk"><div class="sc-label">LUK</div><input type="number" id="w-luk" value="0" oninput="calcAll()"></div>
+      </div>
+
+      <div class="toggle-row">
+        <label>
+          <input type="checkbox" id="w-active" onchange="calcAll()">
+          Apply to Character
+        </label>
+        <button class="btn btn-ghost" onclick="resetWeapon()">Reset</button>
+      </div>
+    </div>
+
+    <div class="card" id="weapon-impact" style="display:none">
+      <div class="section-label">Sub-Stat Impact — Bare → Armed</div>
+      <div class="sub-grid" id="delta-out"></div>
+    </div>
+  </div>
+
+  <!-- ── TAB 2 : ARENA ── -->
+  <div id="panel-2" class="panel">
+    <div class="card">
+      <div class="section-label">Enemy Setup</div>
+      <div class="row" style="margin-bottom:14px">
+        <div class="col">
+          <label class="field-label">Enemy Name</label>
+          <input type="text" id="e-name" value="Enemy" oninput="calcSim()">
+        </div>
+        <label class="btn btn-file">
+          Load Enemy JSON
+          <input type="file" accept=".json" onchange="importEnemy(this)">
+        </label>
+      </div>
+      <div class="enemy-grid">
+        <div><label class="field-label">Max HP</label><input type="number" id="e-hp" value="200" oninput="calcSim()"></div>
+        <div><label class="field-label">ATK</label><input type="number" id="e-atk" value="25" oninput="calcSim()"></div>
+        <div><label class="field-label">DEF</label><input type="number" id="e-def" value="10" oninput="calcSim()"></div>
+        <div><label class="field-label">Dmg Reduction (0–1)</label><input type="number" id="e-dr" value="0" step="0.01" min="0" max="1" oninput="calcSim()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Simulation — Basic Attacks Only</div>
+
+      <div class="vs-container">
+        <div class="vs-side">
+          <div class="vs-name" id="sim-p-name">Player</div>
+          <div class="vs-stat">HP <span id="sim-p-hp">—</span></div>
+          <div class="vs-stat">P.ATK <span id="sim-p-ppow">—</span></div>
+          <div class="vs-stat">P.DEF <span id="sim-p-pdef">—</span></div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="vs-side">
+          <div class="vs-name" id="sim-e-name">Enemy</div>
+          <div class="vs-stat">HP <span id="sim-e-hp">—</span></div>
+          <div class="vs-stat">ATK <span id="sim-e-atk">—</span></div>
+          <div class="vs-stat">DEF <span id="sim-e-def">—</span></div>
+        </div>
+      </div>
+
+      <div class="sim-boxes">
+        <div class="sim-box" id="sim-box-p">
+          <div class="sim-label">Player Deals</div>
+          <div class="sim-dmg" id="sim-p-dmg">—</div>
+          <div class="sim-unit">Dmg / hit</div>
+          <div class="sim-htk" id="sim-p-htk">— hits to kill</div>
+        </div>
+        <div class="sim-box" id="sim-box-e">
+          <div class="sim-label">Enemy Deals</div>
+          <div class="sim-dmg" id="sim-e-dmg">—</div>
+          <div class="sim-unit">Dmg / hit</div>
+          <div class="sim-htk" id="sim-e-htk">— hits to kill</div>
+        </div>
+      </div>
+
+      <div class="verdict tie" id="sim-verdict">Load a character to simulate combat.</div>
+    </div>
+  </div>
+
+  <!-- ── TAB 3 : SETTINGS ── -->
+  <div id="panel-3" class="panel">
+    <div class="card">
+      <div class="section-label">Import Character Data</div>
+      <label class="drop-zone" for="char-file-input">
+        <input type="file" id="char-file-input" accept=".json" onchange="importChar(this)">
+        <div class="dz-icon">⬆</div>
+        <div class="dz-title">Drop JSON or click to browse</div>
+        <div class="dz-sub">Export from Unity via Tools → Battle Calculator Exporter</div>
+      </label>
+
+      <div class="section-label">Manual Base Stats</div>
+      <div id="manual-block">
+        <div class="row">
+          <div class="col"><label class="field-label">Base BA</label><input type="number" id="m-ba" value="10" step="0.5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base BD</label><input type="number" id="m-bd" value="0" step="0.5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base ASPD</label><input type="number" id="m-aspd" value="1" step="0.1" oninput="calcAll()"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label class="field-label">Base MAXHP</label><input type="number" id="m-hp" value="100" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base MAXMP</label><input type="number" id="m-mp" value="50" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base MAXPP</label><input type="number" id="m-pp" value="50" oninput="calcAll()"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label class="field-label">Base STR</label><input type="number" id="m-str" value="5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base VIT</label><input type="number" id="m-vit" value="5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base INT</label><input type="number" id="m-int" value="5" oninput="calcAll()"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label class="field-label">Base DEX</label><input type="number" id="m-dex" value="5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base AGI</label><input type="number" id="m-agi" value="5" oninput="calcAll()"></div>
+          <div class="col"><label class="field-label">Base LUK</label><input type="number" id="m-luk" value="5" oninput="calcAll()"></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:4px">
+          Manual mode uses base + allo only. Import a JSON to include full growth table bonuses.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Formula Multipliers</div>
+      <div id="cfg-fields"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Config & State ─────────────────────────────────────── */
+const CFG_DEFAULTS = {
+  ppow_BABonus: 0.025, ppow_BDOffset: 0.010, maxHp_Vit: 0.015,
+  def_BD: 0.001, defStats_BD: 0.010, maxMp_Base: 0.015,
+  aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1
+};
+const CFG_LABELS = {
+  ppow_BABonus:  'PPOW / MPOW — BA bonus multiplier',
+  ppow_BDOffset: 'PPOW / MPOW — BA offset multiplier',
+  maxHp_Vit:     'MAXHP — VIT multiplier',
+  def_BD:        'PDEF / MDEF / TDEF — BD multiplier',
+  defStats_BD:   'PDEF / MDEF — STR / INT scaling',
+  maxMp_Base:    'MAXMP — base multiplier',
+  aspd_Agi:      'ASPD — AGI multiplier',
+  cit_Agi:       'CIT — AGI multiplier',
+  minDmg:        'Minimum damage floor'
+};
+
+let cfg = { ...CFG_DEFAULTS };
+let charData = null;
+let bareResult = null, armedResult = null;
+
+/* ── Helpers ───────────────────────────────────────────── */
+const el  = id => document.getElementById(id);
+const fv  = id => parseFloat(el(id).value) || 0;
+const iv  = id => parseInt(el(id).value)   || 0;
+const sv  = id => el(id).value;
+
+let toastTimer;
+function showToast(msg) {
+  const t = el('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.style.display = 'none', 2800);
+}
+
+function setTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+  document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', i === j));
+}
+
+/* ── Formula Config Builder ────────────────────────────── */
+function buildCfgFields() {
+  el('cfg-fields').innerHTML = Object.entries(CFG_DEFAULTS).map(([k, v]) => `
+    <div class="cfg-row">
+      <span class="cfg-label">${CFG_LABELS[k] || k}</span>
+      <input type="number" id="cfg-${k}" value="${v}" step="0.0001"
+             oninput="cfg['${k}']=parseFloat(this.value)||0;calcAll()">
+    </div>`).join('');
+}
+
+/* ── Element Badge ─────────────────────────────────────── */
+function updateElemBadge() {
+  const e = sv('w-elem');
+  el('elem-badge-row').innerHTML = `<span class="elem-pill elem-${e}">${e}</span>`;
+}
+
+/* ── Data Sources ──────────────────────────────────────── */
+function getBaseData() {
+  if (charData) return charData;
+  return {
+    Base_BA: fv('m-ba'), Base_BD: fv('m-bd'), Base_ASPD: fv('m-aspd'),
+    Base_MAXHP: fv('m-hp'), Base_MAXMP: fv('m-mp'), Base_MAXPP: fv('m-pp'),
+    Base_STR: iv('m-str'), Base_VIT: iv('m-vit'), Base_INT: iv('m-int'),
+    Base_DEX: iv('m-dex'), Base_AGI: iv('m-agi'), Base_LUK: iv('m-luk'),
+    growthTable: [], name: 'Character'
+  };
+}
+
+function getWeaponCtx() {
+  if (!el('w-active').checked) return null;
+  return {
+    name: sv('w-name') || 'Weapon',
+    BABonus: fv('w-ba'),
+    STR: iv('w-str'), VIT: iv('w-vit'), INT: iv('w-int'),
+    DEX: iv('w-dex'), AGI: iv('w-agi'), LUK: iv('w-luk'),
+    element: sv('w-elem')
+  };
+}
+
+/* ── BattleCalculator (JS port) ────────────────────────── */
+function computeGrowth(data, level) {
+  let s = {
+    STR: data.Base_STR || 0, VIT: data.Base_VIT || 0, INT: data.Base_INT || 0,
+    DEX: data.Base_DEX || 0, AGI: data.Base_AGI || 0, LUK: data.Base_LUK || 0
+  };
+  let allo = 0;
+  const gt = data.growthTable || [];
+  for (let lvl = 1; lvl <= level; lvl++) {
+    const r = gt.find(r => lvl >= r.minLevel && lvl <= r.maxLevel);
+    if (!r) continue;
+    s.STR += r.perLevel_STR || 0; s.VIT += r.perLevel_VIT || 0; s.INT += r.perLevel_INT || 0;
+    s.DEX += r.perLevel_DEX || 0; s.AGI += r.perLevel_AGI || 0; s.LUK += r.perLevel_LUK || 0;
+    if (lvl === r.maxLevel) {
+      s.STR += r.milestone_STR || 0; s.VIT += r.milestone_VIT || 0; s.INT += r.milestone_INT || 0;
+      s.DEX += r.milestone_DEX || 0; s.AGI += r.milestone_AGI || 0; s.LUK += r.milestone_LUK || 0;
+      allo += r.milestoneAlloPoints || 0;
+    }
+  }
+  return { stats: s, alloPoints: allo };
+}
+
+function calcSubStats(stats, data, weaponBA = 0) {
+  const ba = (data.Base_BA || 0) + weaponBA;
+  const bd = data.Base_BD || 0;
+  const c  = cfg;
+  const r  = v => +v.toFixed(2);
+  return {
+    BA:    r(ba),
+    BD:    r(bd),
+    PPOW:  r((stats.STR + ba * c.ppow_BABonus + ba) + (stats.STR - ba * c.ppow_BDOffset - ba)),
+    MPOW:  r((stats.INT + ba * c.ppow_BABonus + ba) + (stats.INT - ba * c.ppow_BDOffset - ba)),
+    MAXHP: +((1 + stats.VIT * c.maxHp_Vit) * (data.Base_MAXHP || 100)).toFixed(1),
+    PDEF:  r(stats.VIT + bd * c.def_BD + stats.STR * c.defStats_BD),
+    MDEF:  r(stats.VIT + bd * c.def_BD + stats.INT * c.defStats_BD),
+    TDEF:  r(stats.VIT + bd * c.def_BD),
+    MAXMP: +((stats.DEX + (data.Base_MAXMP || 0) * c.maxMp_Base)).toFixed(1),
+    MAXPP: +(data.Base_MAXPP || 0),
+    ASPD:  +((data.Base_ASPD || 1) + stats.AGI * c.aspd_Agi).toFixed(3),
+    CIT:   r(ba + stats.AGI * c.cit_Agi),
+  };
+}
+
+/* ── Main Calculation ──────────────────────────────────── */
+function calcAll() {
+  const data  = getBaseData();
+  const level = iv('lvl');
+  const { stats: growth, alloPoints: maxAllo } = computeGrowth(data, level);
+
+  const allo = {
+    STR: iv('a-str'), VIT: iv('a-vit'), INT: iv('a-int'),
+    DEX: iv('a-dex'), AGI: iv('a-agi'), LUK: iv('a-luk')
+  };
+  const usedAllo = Object.values(allo).reduce((a, b) => a + b, 0);
+
+  const bare = {
+    STR: growth.STR + allo.STR, VIT: growth.VIT + allo.VIT,
+    INT: growth.INT + allo.INT, DEX: growth.DEX + allo.DEX,
+    AGI: growth.AGI + allo.AGI, LUK: growth.LUK + allo.LUK
+  };
+
+  bareResult = { main: bare, sub: calcSubStats(bare, data, 0) };
+
+  const wep = getWeaponCtx();
+  let armed = { ...bare }, wepBA = 0;
+  if (wep) {
+    armed = {
+      STR: bare.STR + wep.STR, VIT: bare.VIT + wep.VIT,
+      INT: bare.INT + wep.INT, DEX: bare.DEX + wep.DEX,
+      AGI: bare.AGI + wep.AGI, LUK: bare.LUK + wep.LUK
+    };
+    wepBA = wep.BABonus || 0;
+  }
+  armedResult = { main: armed, sub: calcSubStats(armed, data, wepBA) };
+
+  /* Allo bar */
+  const pct = maxAllo > 0 ? Math.min(100, usedAllo / maxAllo * 100) : 0;
+  el('allo-fill').style.width = pct + '%';
+  el('allo-fill').classList.toggle('over', usedAllo > maxAllo);
+  el('allo-info').textContent = `${usedAllo} / ${maxAllo}`;
+  el('allo-info').classList.toggle('over', usedAllo > maxAllo);
+
+  /* Main stats */
+  const ms = armedResult.main;
+  ['str','vit','int','dex','agi','luk'].forEach(s => el(`ms-${s}`).textContent = ms[s.toUpperCase()]);
+
+  /* Sub-stats */
+  const sub  = armedResult.sub;
+  const keys = Object.keys(sub);
+  el('sub-out').innerHTML = keys.map(k => `
+    <div class="sub-row">
+      <span class="sn">${k}</span>
+      <span class="sv">${sub[k]}</span>
+    </div>`).join('');
+
+  /* Weapon delta */
+  if (wep && bareResult) {
+    el('weapon-impact').style.display = 'block';
+    const bs = bareResult.sub;
+    el('delta-out').innerHTML = keys.map(k => {
+      const d  = sub[k] - bs[k];
+      const dc = d > 0.001 ? 'pos' : d < -0.001 ? 'neg' : '';
+      const ds = d >= 0 ? `+${d.toFixed(1)}` : `${d.toFixed(1)}`;
+      return `<div class="sub-row">
+        <span class="sn">${k}</span>
+        <span class="sv">${bs[k]}<span class="delta ${dc}">${dc ? ds : ''}</span> → ${sub[k]}</span>
+      </div>`;
+    }).join('');
+  } else {
+    el('weapon-impact').style.display = 'none';
+  }
+
+  updateSimHeader();
+  calcSim();
+}
+
+/* ── Arena ─────────────────────────────────────────────── */
+function updateSimHeader() {
+  if (!armedResult) return;
+  const sub  = armedResult.sub;
+  const name = (charData && charData.name) || 'Character';
+  el('sim-p-name').textContent  = `Lv.${iv('lvl')} ${name}`;
+  el('sim-p-hp').textContent    = sub.MAXHP;
+  el('sim-p-ppow').textContent  = sub.PPOW;
+  el('sim-p-pdef').textContent  = sub.PDEF;
+}
+
+function calcSim() {
+  if (!armedResult) return;
+  const sub  = armedResult.sub;
+  const eHP  = fv('e-hp'), eATK = fv('e-atk'), eDEF = fv('e-def'), eDR = fv('e-dr');
+  const minD = cfg.minDmg || 1;
+
+  const pDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  const eDmg = Math.max(minD, eATK - sub.PDEF);
+  const pHTK = pDmg > 0 ? Math.ceil(eHP   / pDmg) : 9999;
+  const eHTK = eDmg > 0 ? Math.ceil(sub.MAXHP / eDmg) : 9999;
+
+  el('sim-e-name').textContent = sv('e-name') || 'Enemy';
+  el('sim-e-hp').textContent   = eHP;
+  el('sim-e-atk').textContent  = eATK;
+  el('sim-e-def').textContent  = eDEF;
+
+  el('sim-p-dmg').textContent  = pDmg.toFixed(1);
+  el('sim-e-dmg').textContent  = eDmg.toFixed(1);
+  el('sim-p-htk').textContent  = `${pHTK} hit${pHTK !== 1 ? 's' : ''} to kill`;
+  el('sim-e-htk').textContent  = `${eHTK} hit${eHTK !== 1 ? 's' : ''} to kill`;
+
+  const pBox = el('sim-box-p'), eBox = el('sim-box-e');
+  const v    = el('sim-verdict');
+
+  pBox.className = 'sim-box';
+  eBox.className = 'sim-box';
+
+  if (pHTK < eHTK) {
+    pBox.classList.add('win-box');
+    v.className = 'verdict win';
+    v.textContent = 'Player wins the basic attack trade.';
+  } else if (eHTK < pHTK) {
+    eBox.classList.add('win-box');
+    v.className = 'verdict lose';
+    v.textContent = 'Enemy wins — player needs better stats or must dodge.';
+  } else {
+    v.className = 'verdict tie';
+    v.textContent = 'Tie — whoever strikes first wins.';
+  }
+}
+
+/* ── Weapon Reset ──────────────────────────────────────── */
+function resetWeapon() {
+  ['w-ba','w-str','w-vit','w-int','w-dex','w-agi','w-luk'].forEach(id => el(id).value = 0);
+  el('w-name').value = 'Test Weapon';
+  el('w-elem').value = 'None';
+  el('w-active').checked = false;
+  updateElemBadge();
+  calcAll();
+}
+
+/* ── Import ────────────────────────────────────────────── */
+function importChar(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      charData = d;
+      el('char-badge').textContent = d.name || 'Loaded';
+      el('char-badge').classList.add('loaded');
+      el('manual-block').style.opacity = '0.4';
+      el('manual-block').style.pointerEvents = 'none';
+      showToast(`Character loaded: ${d.name || 'unknown'}`);
+      calcAll();
+    } catch { showToast('Invalid JSON — check the file.'); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function importEnemy(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.enemyName)            el('e-name').value = d.enemyName;
+      if (d.calculatedMaxHealth)  el('e-hp').value   = d.calculatedMaxHealth;
+      if (d.baseAttack)           el('e-atk').value  = d.baseAttack;
+      if (d.calculatedDefense)    el('e-def').value  = d.calculatedDefense;
+      if (d.damageReduction != null) el('e-dr').value = d.damageReduction;
+      showToast(`Enemy loaded: ${d.enemyName || 'unknown'}`);
+      calcSim();
+    } catch { showToast('Invalid JSON — check the file.'); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+/* ── Event handlers ────────────────────────────────────── */
+function onLvl(val) { el('lvl-out').textContent = val; calcAll(); }
+
+/* ── Init ──────────────────────────────────────────────── */
+buildCfgFields();
+updateElemBadge();
+calcAll();
+</script>
+</body>
+</html>

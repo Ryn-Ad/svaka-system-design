@@ -1,0 +1,11 @@
+{
+    "ppow_BABonusMultiplier": 0.02500000037252903,
+    "ppow_BDOffsetMultiplier": 0.009999999776482582,
+    "maxHp_VitMultiplier": 0.014999999664723874,
+    "def_BDMultiplier": 0.0010000000474974514,
+    "defStats_BDMultiplier": 0.014999999664723874,
+    "maxMp_BaseMpMultiplier": 0.15000000596046449,
+    "aspd_AgiMultiplier": 0.15000000596046449,
+    "cit_AgiMultiplier": 0.75,
+    "minDamageFloor": 1.0
+}
