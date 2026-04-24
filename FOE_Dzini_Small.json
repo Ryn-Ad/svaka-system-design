@@ -2,6 +2,6 @@
     "enemyName": "Dzini",
     "calculatedMaxHealth": 150.0,
     "baseAttack": 5.0,
-    "calculatedDefense": 3.0,
+    "calculatedDefense": 5.0,
     "damageReduction": 0.0
 }
