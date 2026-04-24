@@ -854,6 +854,151 @@ input[type="checkbox"]:checked::after {
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+
+/* ── Combo Section ────────────────────────────────────────── */
+.combo-section { margin-top: 16px; }
+
+.combo-compare {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.combo-side {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.combo-side.flat-side  { border-top: 2px solid var(--border-hi); }
+.combo-side.combo-side-active { border-top: 2px solid var(--green-dim); background: var(--green-bg); }
+
+.combo-side .cs-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.combo-side .cs-htk {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-prime);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.combo-side.combo-side-active .cs-htk { color: var(--green); }
+
+.combo-side .cs-sub {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: .04em;
+}
+
+.combo-arrow {
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--amber);
+  text-align: center;
+}
+
+.combo-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.combo-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.combo-detail-row .cdn {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.combo-detail-row .cdv {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-prime);
+}
+
+.combo-formula-note {
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 8px 12px;
+  border-left: 2px solid var(--amber-dim);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.savings-badge {
+  text-align: center;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  border: 1px solid;
+}
+
+.savings-badge.saved    { background: var(--green-bg); border-color: var(--green-dim); color: var(--green); }
+.savings-badge.no-saved { background: var(--bg-raised); border-color: var(--border); color: var(--text-dim); }
+
+/* Damage ramp bar */
+.ramp-bar-container { margin-bottom: 14px; }
+.ramp-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ramp-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--amber-dim), var(--green));
+  position: relative;
+  margin-bottom: 3px;
+}
+
+.ramp-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
 </style>
 </head>
 <body>
@@ -1049,6 +1194,52 @@ input[type="checkbox"]:checked::after {
 
       <div class="verdict tie" id="sim-verdict">Load a character to simulate combat.</div>
     </div>
+
+    <div class="card combo-section" id="combo-card">
+      <div class="section-label">Combo Simulation</div>
+
+      <div class="combo-formula-note" id="combo-formula-note">
+        Formula: hit N damage = baseDmg &times; (1 + N &times; <strong id="combo-mult-display">0.0150</strong>)<br>
+        Each consecutive hit escalates. Combo never resets in this simulation.
+      </div>
+
+      <div class="combo-compare">
+        <div class="combo-side flat-side">
+          <div class="cs-label">Without Combo</div>
+          <div class="cs-htk" id="combo-flat-htk">—</div>
+          <div class="cs-sub" id="combo-flat-sub">— dmg / hit</div>
+        </div>
+        <div class="combo-arrow">▶</div>
+        <div class="combo-side combo-side-active">
+          <div class="cs-label">Full Combo</div>
+          <div class="cs-htk" id="combo-htk">—</div>
+          <div class="cs-sub" id="combo-htk-sub">— hits to kill</div>
+        </div>
+      </div>
+
+      <div class="ramp-bar-container">
+        <div class="ramp-label">
+          <span>Damage ramp — Hit 1 to Kill Hit</span>
+          <span id="ramp-range">—</span>
+        </div>
+        <div class="ramp-bar"></div>
+        <div class="ramp-ticks">
+          <span id="ramp-lo">—</span>
+          <span>DMG</span>
+          <span id="ramp-hi">—</span>
+        </div>
+      </div>
+
+      <div class="combo-detail-grid">
+        <div class="combo-detail-row"><span class="cdn">Avg dmg / hit</span><span class="cdv" id="combo-avg">—</span></div>
+        <div class="combo-detail-row"><span class="cdn">Total dmg dealt</span><span class="cdv" id="combo-total">—</span></div>
+        <div class="combo-detail-row"><span class="cdn">Kill blow ×</span><span class="cdv" id="combo-mult">—</span></div>
+        <div class="combo-detail-row"><span class="cdn">Kill blow dmg</span><span class="cdv" id="combo-kill-dmg">—</span></div>
+      </div>
+
+      <div class="savings-badge no-saved" id="combo-savings">Load a character to see combo efficiency.</div>
+    </div>
+
   </div>
 
   <!-- ── TAB 3 : SETTINGS ── -->
@@ -1105,7 +1296,7 @@ input[type="checkbox"]:checked::after {
 const CFG_DEFAULTS = {
   ppow_BABonus: 0.025, ppow_BDOffset: 0.010, maxHp_Vit: 0.015,
   def_BD: 0.001, defStats_BD: 0.010, maxMp_Base: 0.015,
-  aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1
+  aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1, comboMult: 0.015
 };
 const CFG_LABELS = {
   ppow_BABonus:  'PPOW / MPOW — BA bonus multiplier',
@@ -1116,7 +1307,8 @@ const CFG_LABELS = {
   maxMp_Base:    'MAXMP — base multiplier',
   aspd_Agi:      'ASPD — AGI multiplier',
   cit_Agi:       'CIT — AGI multiplier',
-  minDmg:        'Minimum damage floor'
+  minDmg:        'Minimum damage floor',
+  comboMult:     'Combo — multiplier per consecutive hit'
 };
 
 let cfg = { ...CFG_DEFAULTS };
@@ -1296,6 +1488,7 @@ function calcAll() {
 
   updateSimHeader();
   calcSim();
+  calcCombo();
 }
 
 /* ── Arena ─────────────────────────────────────────────── */
@@ -1311,6 +1504,7 @@ function updateSimHeader() {
 
 function calcSim() {
   if (!armedResult) return;
+  calcCombo();
   const sub  = armedResult.sub;
   const eHP  = fv('e-hp'), eATK = fv('e-atk'), eDEF = fv('e-def'), eDR = fv('e-dr');
   const minD = cfg.minDmg || 1;
@@ -1401,6 +1595,72 @@ function importEnemy(input) {
 
 /* ── Event handlers ────────────────────────────────────── */
 function onLvl(val) { el('lvl-out').textContent = val; calcAll(); }
+
+
+/* ── Combo Simulation ──────────────────────────────────────── */
+function calcCombo() {
+  const comboMultInput = parseFloat(
+    (document.getElementById('cfg-comboMult') || {}).value
+  ) || 0.015;
+
+  // Update formula note
+  const multEl = document.getElementById('combo-mult-display');
+  if (multEl) multEl.textContent = comboMultInput.toFixed(4);
+
+  if (!armedResult) return;
+
+  const sub  = armedResult.sub;
+  const eHP  = fv('e-hp'), eDEF = fv('e-def'), eDR = fv('e-dr');
+  const minD = cfg.minDmg || 1;
+
+  // Base damage per hit (same as flat sim)
+  const baseDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+
+  // Flat hits to kill (reference)
+  const flatHTK = baseDmg > 0 ? Math.ceil(eHP / baseDmg) : 9999;
+
+  // Combo iteration
+  let totalDmg = 0, hits = 0, lastHitDmg = 0, lastMult = 1;
+  while (totalDmg < eHP && hits < 9999) {
+    hits++;
+    lastMult    = 1 + hits * comboMultInput;
+    lastHitDmg  = baseDmg * lastMult;
+    totalDmg   += lastHitDmg;
+  }
+
+  const hit1Dmg = baseDmg * (1 + comboMultInput);
+  const avgDmg  = hits > 0 ? totalDmg / hits : 0;
+  const saved   = Math.max(0, flatHTK - hits);
+
+  // Update flat column
+  el('combo-flat-htk').textContent = flatHTK >= 9999 ? '∞' : flatHTK;
+  el('combo-flat-sub').textContent = baseDmg.toFixed(1) + ' dmg / hit';
+
+  // Update combo column
+  el('combo-htk').textContent     = hits >= 9999 ? '∞' : hits;
+  el('combo-htk-sub').textContent = hits >= 9999 ? 'can\'t kill' : hits + ' consecutive hit' + (hits !== 1 ? 's' : '');
+
+  // Ramp display
+  el('ramp-lo').textContent   = hit1Dmg.toFixed(1);
+  el('ramp-hi').textContent   = lastHitDmg.toFixed(1);
+  el('ramp-range').textContent = hit1Dmg.toFixed(1) + ' → ' + lastHitDmg.toFixed(1);
+
+  // Detail grid
+  el('combo-avg').textContent      = avgDmg.toFixed(1);
+  el('combo-total').textContent    = totalDmg.toFixed(1);
+  el('combo-mult').textContent     = '×' + lastMult.toFixed(3);
+  el('combo-kill-dmg').textContent = lastHitDmg.toFixed(1);
+
+  // Savings badge
+  const badge = el('combo-savings');
+  if (saved > 0) {
+    badge.className = 'savings-badge saved';
+    badge.textContent = `Combo saves ${saved} hit${saved !== 1 ? 's' : ''} vs flat — ${((saved / flatHTK) * 100).toFixed(0)}% fewer hits needed`;
+  } else {
+    badge.className = 'savings-badge no-saved';
+    badge.textContent = 'No hits saved — combo ramp does not help vs this enemy at this level.';
+  }
+}
 
 /* ── Init ──────────────────────────────────────────────── */
 buildCfgFields();
