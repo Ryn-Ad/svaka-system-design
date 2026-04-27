@@ -999,6 +999,132 @@ input[type="checkbox"]:checked::after {
   color: var(--text-dim);
 }
 
+
+/* ── Element System Updates ───────────────────────────────── */
+.elem-None    { background: rgba(100,100,120,.10); color: var(--text-dim); border-color: var(--border); }
+.sub-Light    { background: rgba(255,245,180,.10); color: #f5f0a8; border-color: rgba(255,245,180,.3); }
+.sub-Dark     { background: rgba(140,60,220,.12);  color: #a060e0; border-color: rgba(140,60,220,.3); }
+.sub-None     { background: rgba(100,100,120,.10); color: var(--text-dim); border-color: var(--border); }
+
+.tod-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.tod-btn {
+  flex: 1;
+  padding: 8px 10px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+}
+.tod-btn:hover { color: var(--text-prime); border-color: var(--border-hi); }
+.tod-btn.tod-active { color: var(--text-prime); font-weight: 700; }
+.tod-dawn   { border-color: rgba(255,150,80,.4) !important;  background: rgba(255,150,80,.08) !important;  color: #ff9650 !important; }
+.tod-day    { border-color: rgba(255,230,80,.4) !important;  background: rgba(255,230,80,.08) !important;  color: #ffe650 !important; }
+.tod-dusk   { border-color: rgba(180,80,200,.4) !important;  background: rgba(180,80,200,.08) !important;  color: #b450c8 !important; }
+.tod-night  { border-color: rgba(80,80,200,.4)  !important;  background: rgba(80,80,200,.08)  !important;  color: #6060e0 !important; }
+
+.matchup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid;
+  margin-bottom: 8px;
+}
+.matchup-strong { background: var(--green-bg); border-color: var(--green-dim); color: var(--green); }
+.matchup-weak   { background: var(--red-bg);   border-color: var(--red-dim);   color: var(--red); }
+.matchup-neutral{ background: var(--bg-raised); border-color: var(--border);    color: var(--text-dim); }
+
+.elem-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+
+
+/* ── Element Reference Table ─────────────────────────────── */
+.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ref-table th {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 6px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.ref-table td {
+  padding: 5px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.ref-table .row-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-align: left;
+  color: var(--text-prime);
+  background: var(--bg-raised);
+  padding-left: 10px;
+  border: 1px solid var(--border);
+}
+.ref-cell-strong { background: var(--green-bg); color: var(--green); border-color: var(--green-dim) !important; }
+.ref-cell-weak   { background: var(--red-bg);   color: var(--red);   border-color: var(--red-dim)   !important; }
+.ref-cell-equal  { background: var(--bg-raised); color: var(--text-dim); }
+.ref-cell-self   { background: var(--bg-base);   color: var(--text-dim); opacity: .4; }
+
+.tod-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.tod-ref-cell {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+.tod-ref-cell .trc-time {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.tod-ref-cell .trc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.tod-ref-cell .trc-row .trc-sub { color: var(--text-mid); font-family: var(--font-ui); font-weight: 600; }
+.tod-ref-cell .trc-row .trc-val { font-family: var(--font-mono); font-size: 12px; }
+.trc-val.v-strong { color: var(--green); }
+.trc-val.v-weak   { color: var(--red); }
+.trc-val.v-half-s { color: #8ed46a; }
+.trc-val.v-half-w { color: #e08060; }
 </style>
 </head>
 <body>
@@ -1093,16 +1219,26 @@ input[type="checkbox"]:checked::after {
           <label class="field-label">Weapon Name</label>
           <input type="text" id="w-name" value="Test Weapon" oninput="calcAll()">
         </div>
-        <div class="col">
-          <label class="field-label">Element</label>
-          <select id="w-elem" onchange="updateElemBadge();calcAll()">
-            <option>Fire</option><option>Water</option><option>Earth</option>
-            <option>Wind</option><option>Thunder</option><option>Light</option>
-            <option>Dark</option><option>None</option>
+      </div>
+      <div class="elem-row">
+        <div>
+          <label class="field-label">Main Element</label>
+          <select id="w-main-elem" onchange="updateElemBadge();calcAll()">
+            <option value="None">None</option>
+            <option value="Fire">Fire</option><option value="Water">Water</option>
+            <option value="Earth">Earth</option><option value="Wind">Wind</option>
+            <option value="Thunder">Thunder</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Sub-Element</label>
+          <select id="w-sub-elem" onchange="updateElemBadge();calcAll()">
+            <option value="None">None</option>
+            <option value="Light">Light</option>
+            <option value="Dark">Dark</option>
           </select>
         </div>
       </div>
-
       <div id="elem-badge-row" style="margin-bottom:16px"></div>
 
       <div class="ba-highlight">
@@ -1139,6 +1275,19 @@ input[type="checkbox"]:checked::after {
   <!-- ── TAB 2 : ARENA ── -->
   <div id="panel-2" class="panel">
     <div class="card">
+      <div class="section-label">Time of Day</div>
+      <div class="tod-row">
+        <button class="tod-btn tod-dawn"  onclick="setTod('Dawn')"  id="tod-dawn">Dawn</button>
+        <button class="tod-btn tod-day tod-active" onclick="setTod('Day')"   id="tod-day">Day</button>
+        <button class="tod-btn tod-dusk"  onclick="setTod('Dusk')"  id="tod-dusk">Dusk</button>
+        <button class="tod-btn tod-night" onclick="setTod('Night')" id="tod-night">Night</button>
+      </div>
+      <div id="tod-description" style="font-size:12px;color:var(--text-dim);margin-bottom:4px">
+        Day — Light ×2.0 (max) | Dark ×0.5 (min)
+      </div>
+    </div>
+
+    <div class="card">
       <div class="section-label">Enemy Setup</div>
       <div class="row" style="margin-bottom:14px">
         <div class="col">
@@ -1156,14 +1305,41 @@ input[type="checkbox"]:checked::after {
         <div><label class="field-label">DEF</label><input type="number" id="e-def" value="10" oninput="calcSim()"></div>
         <div><label class="field-label">Dmg Reduction (0–1)</label><input type="number" id="e-dr" value="0" step="0.01" min="0" max="1" oninput="calcSim()"></div>
       </div>
+      <div class="elem-row" style="margin-top:10px">
+        <div>
+          <label class="field-label">Enemy Main Element</label>
+          <select id="e-main-elem" onchange="calcSim()">
+            <option value="None">None</option>
+            <option value="Fire">Fire</option>
+            <option value="Water">Water</option>
+            <option value="Earth">Earth</option>
+            <option value="Wind">Wind</option>
+            <option value="Thunder">Thunder</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Enemy Sub-Element</label>
+          <select id="e-sub-elem" onchange="calcSim()">
+            <option value="None">None</option>
+            <option value="Light">Light</option>
+            <option value="Dark">Dark</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="card">
       <div class="section-label">Simulation — Basic Attacks Only</div>
 
+      <div id="matchup-display" style="margin-bottom:12px;display:none">
+        <div id="matchup-badge" class="matchup-badge matchup-neutral">Neutral ×1.00</div>
+        <div id="sub-elem-info" style="font-size:12px;color:var(--text-dim)"></div>
+      </div>
+
       <div class="vs-container">
         <div class="vs-side">
           <div class="vs-name" id="sim-p-name">Player</div>
+          <div id="sim-p-elem-badge" style="margin-bottom:6px;min-height:18px"><span style="font-size:10px;color:var(--text-dim)">No element</span></div>
           <div class="vs-stat">HP <span id="sim-p-hp">—</span></div>
           <div class="vs-stat">P.ATK <span id="sim-p-ppow">—</span></div>
           <div class="vs-stat">P.DEF <span id="sim-p-pdef">—</span></div>
@@ -1171,6 +1347,7 @@ input[type="checkbox"]:checked::after {
         <div class="vs-divider">VS</div>
         <div class="vs-side">
           <div class="vs-name" id="sim-e-name">Enemy</div>
+          <div id="sim-e-elem-badge" style="margin-bottom:6px;min-height:18px"><span style="font-size:10px;color:var(--text-dim)">No element</span></div>
           <div class="vs-stat">HP <span id="sim-e-hp">—</span></div>
           <div class="vs-stat">ATK <span id="sim-e-atk">—</span></div>
           <div class="vs-stat">DEF <span id="sim-e-def">—</span></div>
@@ -1244,6 +1421,119 @@ input[type="checkbox"]:checked::after {
 
   <!-- ── TAB 3 : SETTINGS ── -->
   <div id="panel-3" class="panel">
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Element Reference — Main Matchup Table</div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
+        Row = Attacker &nbsp;·&nbsp; Column = Defender &nbsp;·&nbsp;
+        <span style="color:var(--green)">■ Strong</span> &nbsp;
+        <span style="color:var(--red)">■ Weak</span> &nbsp;
+        <span style="color:var(--text-dim)">■ Equal</span>
+      </p>
+      <div style="overflow-x:auto">
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">ATK \ DEF</th>
+              <th style="color:#ff6428">Fire</th>
+              <th style="color:#4a9eff">Water</th>
+              <th style="color:#b07830">Earth</th>
+              <th style="color:#30d4a0">Wind</th>
+              <th style="color:#f0c040">Thunder</th>
+              <th style="color:#666">None</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label" style="color:#ff6428">Fire</td>
+              <td class="ref-cell-self">—</td>
+              <td class="ref-cell-weak">Weak</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-equal">—</td>
+            </tr>
+            <tr>
+              <td class="row-label" style="color:#4a9eff">Water</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-self">—</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-weak">Weak</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-equal">—</td>
+            </tr>
+            <tr>
+              <td class="row-label" style="color:#b07830">Earth</td>
+              <td class="ref-cell-weak">Weak</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-self">—</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-equal">—</td>
+            </tr>
+            <tr>
+              <td class="row-label" style="color:#30d4a0">Wind</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-weak">Weak</td>
+              <td class="ref-cell-self">—</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-equal">—</td>
+            </tr>
+            <tr>
+              <td class="row-label" style="color:#f0c040">Thunder</td>
+              <td class="ref-cell-equal">Equal</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-weak">Weak</td>
+              <td class="ref-cell-strong">Strong</td>
+              <td class="ref-cell-self">—</td>
+              <td class="ref-cell-equal">—</td>
+            </tr>
+            <tr>
+              <td class="row-label">None</td>
+              <td class="ref-cell-equal">—</td>
+              <td class="ref-cell-equal">—</td>
+              <td class="ref-cell-equal">—</td>
+              <td class="ref-cell-equal">—</td>
+              <td class="ref-cell-equal">—</td>
+              <td class="ref-cell-self">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Element Reference — Sub-Element × Time of Day</div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:4px">
+        Sub-elements multiply outgoing damage based on time of day. They stack with main element matchups.
+      </p>
+      <div class="tod-ref-grid">
+        <div class="tod-ref-cell" style="border-top:2px solid rgba(255,150,80,.4)">
+          <div class="trc-time" style="color:#ff9650">Dawn</div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-s">×1.50</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-w">×0.75</span></div>
+        </div>
+        <div class="tod-ref-cell" style="border-top:2px solid rgba(255,230,80,.4)">
+          <div class="trc-time" style="color:#ffe650">Day</div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
+        </div>
+        <div class="tod-ref-cell" style="border-top:2px solid rgba(180,80,200,.4)">
+          <div class="trc-time" style="color:#b450c8">Dusk</div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-w">×0.75</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-s">×1.50</span></div>
+        </div>
+        <div class="tod-ref-cell" style="border-top:2px solid rgba(80,80,200,.4)">
+          <div class="trc-time" style="color:#6060e0">Night</div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--text-dim);margin-top:10px">
+        Note: A Dark attacker at Night (×2.0) effectively deals double damage — this is the "Light-type receives double from Dark at Night" rule. The multiplier comes from the attacker's sub-element, not the defender's.
+      </p>
+    </div>
     <div class="card">
       <div class="section-label">Import Character Data</div>
       <label class="drop-zone" for="char-file-input">
@@ -1296,7 +1586,8 @@ input[type="checkbox"]:checked::after {
 const CFG_DEFAULTS = {
   ppow_BABonus: 0.025, ppow_BDOffset: 0.010, maxHp_Vit: 0.015,
   def_BD: 0.001, defStats_BD: 0.010, maxMp_Base: 0.015,
-  aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1, comboMult: 0.015
+  aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1, comboMult: 0.015, comboMaxMult: 1.6,
+  elemStrong: 1.5, elemWeak: 0.75
 };
 const CFG_LABELS = {
   ppow_BABonus:  'PPOW / MPOW — BA bonus multiplier',
@@ -1308,7 +1599,10 @@ const CFG_LABELS = {
   aspd_Agi:      'ASPD — AGI multiplier',
   cit_Agi:       'CIT — AGI multiplier',
   minDmg:        'Minimum damage floor',
-  comboMult:     'Combo — multiplier per consecutive hit'
+  comboMult:     'Combo — multiplier per consecutive hit',
+  comboMaxMult:  'Combo — maximum multiplier cap (default ×1.6)',
+  elemStrong:    'Element — Strong multiplier (default ×1.5)',
+  elemWeak:      'Element — Weak multiplier (default ×0.75)'
 };
 
 let cfg = { ...CFG_DEFAULTS };
@@ -1351,6 +1645,88 @@ function updateElemBadge() {
   el('elem-badge-row').innerHTML = `<span class="elem-pill elem-${e}">${e}</span>`;
 }
 
+
+/* ── Element System ────────────────────────────────────────── */
+const MAIN_ELEMS = ['Fire','Water','Earth','Wind','Thunder','None'];
+const SUB_ELEMS  = ['None','Light','Dark'];
+const TOD_LIST   = ['Dawn','Day','Dusk','Night'];
+
+// Main element matchup table [attacker][defender] indices:
+// Fire=0, Water=1, Earth=2, Wind=3, Thunder=4, None=5
+const MAIN_MATCHUP = [
+//        Fire   Water  Earth  Wind  Thunder  None
+/* Fire    */[1.0,  0.75,  1.5,   1.0,  1.0,     1.0],
+/* Water   */[1.5,  1.0,   1.0,   0.75, 1.0,     1.0],
+/* Earth   */[0.75, 1.0,   1.0,   1.5,  1.5,     1.0],
+/* Wind    */[1.0,  1.5,   0.75,  1.0,  1.0,     1.0],
+/* Thunder */[1.0,  1.5,   0.75,  1.5,  1.0,     1.0],
+/* None    */[1.0,  1.0,   1.0,   1.0,  1.0,     1.0],
+];
+
+// Sub-element × time-of-day table [sub][tod]
+// None=0, Light=1, Dark=2 | Dawn=0, Day=1, Dusk=2, Night=3
+const SUB_MULT = [
+//         Dawn  Day   Dusk  Night
+/* None  */[1.0, 1.0,  1.0,  1.0],
+/* Light */[1.5, 2.0,  0.75, 0.5],
+/* Dark  */[0.75,0.5,  1.5,  2.0],
+];
+
+const TOD_DESCRIPTIONS = {
+  Dawn:  'Dawn — Light ×1.5 | Dark ×0.75',
+  Day:   'Day — Light ×2.0 (max) | Dark ×0.5 (min)',
+  Dusk:  'Dusk — Light ×0.75 | Dark ×1.5',
+  Night: 'Night — Light ×0.5 (min) | Dark ×2.0 (max)',
+};
+
+let currentTod = 'Day';
+
+function setTod(tod) {
+  currentTod = tod;
+  document.querySelectorAll('.tod-btn').forEach(b => b.classList.remove('tod-active'));
+  const btn = document.getElementById('tod-' + tod.toLowerCase());
+  if (btn) btn.classList.add('tod-active');
+  el('tod-description').textContent = TOD_DESCRIPTIONS[tod] || '';
+  calcSim();
+  calcCombo();
+}
+
+function getMainMult(attackerName, defenderName) {
+  const ai = MAIN_ELEMS.indexOf(attackerName);
+  const di = MAIN_ELEMS.indexOf(defenderName);
+  if (ai < 0 || di < 0) return 1.0;
+  return MAIN_MATCHUP[ai][di];
+}
+
+function getSubMult(subName, todName) {
+  const si = SUB_ELEMS.indexOf(subName);
+  const ti = TOD_LIST.indexOf(todName);
+  if (si < 0 || ti < 0) return 1.0;
+  return SUB_MULT[si][ti];
+}
+
+function getMatchupLabel(mult) {
+  if (mult > 1.05) return { text: 'Strong ×' + mult.toFixed(2), cls: 'matchup-strong' };
+  if (mult < 0.95) return { text: 'Weak ×'   + mult.toFixed(2), cls: 'matchup-weak'   };
+  return               { text: 'Neutral ×' + mult.toFixed(2), cls: 'matchup-neutral' };
+}
+
+function updateElemBadge() {
+  const main = sv('w-main-elem') || 'None';
+  const sub  = sv('w-sub-elem')  || 'None';
+  const MAIN_COLORS = {
+    Fire:'#ff6428', Water:'#4a9eff', Earth:'#b07830',
+    Wind:'#30d4a0', Thunder:'#f0c040', None:'#666'
+  };
+  const SUB_COLORS = { Light:'#f5f0a8', Dark:'#a060e0', None:'#666' };
+  const mc = MAIN_COLORS[main] || '#666';
+  const sc = SUB_COLORS[sub]   || '#666';
+  el('elem-badge-row').innerHTML =
+    (main !== 'None' ? '<span class="elem-pill elem-'+main+'" style="margin-right:6px">'+main+'</span>' : '') +
+    (sub  !== 'None' ? '<span class="elem-pill sub-'+sub+'">'+sub+'</span>' : '') +
+    (main === 'None' && sub === 'None' ? '<span style="font-size:12px;color:var(--text-dim)">No element</span>' : '');
+}
+
 /* ── Data Sources ──────────────────────────────────────── */
 function getBaseData() {
   if (charData) return charData;
@@ -1370,7 +1746,8 @@ function getWeaponCtx() {
     BABonus: fv('w-ba'),
     STR: iv('w-str'), VIT: iv('w-vit'), INT: iv('w-int'),
     DEX: iv('w-dex'), AGI: iv('w-agi'), LUK: iv('w-luk'),
-    element: sv('w-elem')
+    mainElem: sv('w-main-elem') || 'None',
+    subElem:  sv('w-sub-elem')  || 'None',
   };
 }
 
@@ -1503,21 +1880,82 @@ function updateSimHeader() {
 }
 
 function calcSim() {
-  if (!armedResult) return;
-  calcCombo();
+  if (!armedResult) { calcCombo(); return; }
   const sub  = armedResult.sub;
   const eHP  = fv('e-hp'), eATK = fv('e-atk'), eDEF = fv('e-def'), eDR = fv('e-dr');
   const minD = cfg.minDmg || 1;
 
-  const pDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
-  const eDmg = Math.max(minD, eATK - sub.PDEF);
-  const pHTK = pDmg > 0 ? Math.ceil(eHP   / pDmg) : 9999;
-  const eHTK = eDmg > 0 ? Math.ceil(sub.MAXHP / eDmg) : 9999;
+  // Element context
+  const wep       = getWeaponCtx();
+  const wMain     = (wep && wep.mainElem) || 'None';
+  const wSub      = (wep && wep.subElem)  || 'None';
+  const eMain     = sv('e-main-elem') || 'None';
+  const eSub      = sv('e-sub-elem')  || 'None';
 
+  const mainMult  = getMainMult(wMain, eMain);
+  const wSubMult  = getSubMult(wSub,  currentTod);
+  const eSubMult  = getSubMult(eSub,  currentTod);
+
+  // Player damage (with element)
+  const basePDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  const pDmg     = basePDmg * mainMult * wSubMult;
+
+  // Enemy damage (sub-element only — player has no main element target)
+  const baseEDmg = Math.max(minD, eATK - sub.PDEF);
+  const eDmg     = baseEDmg * eSubMult;
+
+  const pHTK = pDmg > 0 ? Math.ceil(eHP        / pDmg) : 9999;
+  const eHTK = eDmg > 0 ? Math.ceil(sub.MAXHP  / eDmg) : 9999;
+
+  // Matchup display — shows main matchup + sub-element breakdown + total multiplier
+  const matchupBadge  = el('matchup-display');
+  const totalElemMult = mainMult * wSubMult;
+  const anyElement    = wMain !== 'None' || wSub !== 'None' || eMain !== 'None' || eSub !== 'None';
+  if (anyElement) {
+    matchupBadge.style.display = 'block';
+    // Main matchup badge
+    const { text, cls } = getMatchupLabel(mainMult);
+    el('matchup-badge').textContent = text;
+    el('matchup-badge').className   = 'matchup-badge ' + cls;
+    // Detailed breakdown parts
+    let parts = [];
+    if (wMain !== 'None' && eMain !== 'None') {
+      parts.push(`Main: ${wMain} vs ${eMain} ×${mainMult.toFixed(2)}`);
+    } else if (wMain !== 'None') {
+      parts.push(`Weapon: ${wMain} (no enemy main element)`);
+    } else if (eMain !== 'None') {
+      parts.push(`Enemy: ${eMain} (no weapon main element)`);
+    }
+    if (wSub !== 'None') parts.push(`Weapon ${wSub} at ${currentTod}: ×${wSubMult.toFixed(2)}`);
+    if (eSub !== 'None') parts.push(`Enemy ${eSub} at ${currentTod}: ×${eSubMult.toFixed(2)}`);
+    if (totalElemMult !== 1.0) {
+      parts.push(`Total player element mult: ×${totalElemMult.toFixed(2)}`);
+    }
+    el('sub-elem-info').textContent = parts.join('  ·  ');
+  } else {
+    matchupBadge.style.display = 'none';
+  }
+
+  // VS side labels + element badges
   el('sim-e-name').textContent = sv('e-name') || 'Enemy';
   el('sim-e-hp').textContent   = eHP;
   el('sim-e-atk').textContent  = eATK;
   el('sim-e-def').textContent  = eDEF;
+
+  // Update player element badge in VS
+  const pElemBadgeEl = el('sim-p-elem-badge');
+  if (pElemBadgeEl) {
+    const wMainV = wMain !== 'None' ? `<span class="elem-pill elem-${wMain}" style="font-size:10px;padding:1px 7px">${wMain}</span>` : '';
+    const wSubV  = wSub  !== 'None' ? `<span class="elem-pill sub-${wSub}" style="font-size:10px;padding:1px 7px">${wSub}</span>` : '';
+    pElemBadgeEl.innerHTML = (wMainV || wSubV) ? (wMainV + ' ' + wSubV) : '<span style="font-size:10px;color:var(--text-dim)">No element</span>';
+  }
+  // Update enemy element badge in VS
+  const eElemBadgeEl = el('sim-e-elem-badge');
+  if (eElemBadgeEl) {
+    const eMainV = eMain !== 'None' ? `<span class="elem-pill elem-${eMain}" style="font-size:10px;padding:1px 7px">${eMain}</span>` : '';
+    const eSubV  = eSub  !== 'None' ? `<span class="elem-pill sub-${eSub}" style="font-size:10px;padding:1px 7px">${eSub}</span>` : '';
+    eElemBadgeEl.innerHTML = (eMainV || eSubV) ? (eMainV + ' ' + eSubV) : '<span style="font-size:10px;color:var(--text-dim)">No element</span>';
+  }
 
   el('sim-p-dmg').textContent  = pDmg.toFixed(1);
   el('sim-e-dmg').textContent  = eDmg.toFixed(1);
@@ -1526,9 +1964,7 @@ function calcSim() {
 
   const pBox = el('sim-box-p'), eBox = el('sim-box-e');
   const v    = el('sim-verdict');
-
-  pBox.className = 'sim-box';
-  eBox.className = 'sim-box';
+  pBox.className = 'sim-box'; eBox.className = 'sim-box';
 
   if (pHTK < eHTK) {
     pBox.classList.add('win-box');
@@ -1542,14 +1978,17 @@ function calcSim() {
     v.className = 'verdict tie';
     v.textContent = 'Tie — whoever strikes first wins.';
   }
+
+  calcCombo();
 }
 
 /* ── Weapon Reset ──────────────────────────────────────── */
 function resetWeapon() {
   ['w-ba','w-str','w-vit','w-int','w-dex','w-agi','w-luk'].forEach(id => el(id).value = 0);
-  el('w-name').value = 'Test Weapon';
-  el('w-elem').value = 'None';
-  el('w-active').checked = false;
+  el('w-name').value      = 'Test Weapon';
+  el('w-main-elem').value = 'None';
+  el('w-sub-elem').value  = 'None';
+  el('w-active').checked  = false;
   updateElemBadge();
   calcAll();
 }
@@ -1614,18 +2053,38 @@ function calcCombo() {
   const minD = cfg.minDmg || 1;
 
   // Base damage per hit (same as flat sim)
-  const baseDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  // Element multipliers (same context as calcSim)
+  const wep2      = getWeaponCtx();
+  const wMain2    = (wep2 && wep2.mainElem) || 'None';
+  const wSub2     = (wep2 && wep2.subElem)  || 'None';
+  const eMain2    = sv('e-main-elem') || 'None';
+  const mainMult2 = getMainMult(wMain2, eMain2);
+  const subMult2  = getSubMult(wSub2,  currentTod);
 
-  // Flat hits to kill (reference)
+  const rawBase   = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  const baseDmg   = rawBase * mainMult2 * subMult2;
+
+  // Combo cap from Settings (cfg.comboMaxMult, default 1.6)
+  const comboCap  = (typeof cfg.comboMaxMult !== 'undefined') ? cfg.comboMaxMult : 1.6;
+
+  // Flat hits to kill (reference, already element-adjusted)
   const flatHTK = baseDmg > 0 ? Math.ceil(eHP / baseDmg) : 9999;
 
-  // Combo iteration
+  // Combo iteration with cap
   let totalDmg = 0, hits = 0, lastHitDmg = 0, lastMult = 1;
   while (totalDmg < eHP && hits < 9999) {
     hits++;
-    lastMult    = 1 + hits * comboMultInput;
-    lastHitDmg  = baseDmg * lastMult;
-    totalDmg   += lastHitDmg;
+    lastMult   = Math.min(1 + hits * comboMultInput, comboCap);
+    lastHitDmg = baseDmg * lastMult;
+    totalDmg  += lastHitDmg;
+    // Fast-path: once cap is reached, skip remaining loop iterations
+    if (Math.abs(lastMult - comboCap) < 0.0001 && lastHitDmg > 0) {
+      const remainHP   = eHP - totalDmg;
+      const remainHits = remainHP > 0 ? Math.ceil(remainHP / lastHitDmg) : 0;
+      hits     += remainHits;
+      totalDmg += remainHits * lastHitDmg;
+      break;
+    }
   }
 
   const hit1Dmg = baseDmg * (1 + comboMultInput);
