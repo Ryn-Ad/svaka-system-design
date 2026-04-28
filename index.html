@@ -1283,7 +1283,7 @@ input[type="checkbox"]:checked::after {
         <button class="tod-btn tod-night" onclick="setTod('Night')" id="tod-night">Night</button>
       </div>
       <div id="tod-description" style="font-size:12px;color:var(--text-dim);margin-bottom:4px">
-        Day — Light ×2.0 (max) | Dark ×0.5 (min)
+        Day — Light ×1.2 (max) | Dark ×0.8 (min)
       </div>
     </div>
 
@@ -1511,23 +1511,23 @@ input[type="checkbox"]:checked::after {
       <div class="tod-ref-grid">
         <div class="tod-ref-cell" style="border-top:2px solid rgba(255,150,80,.4)">
           <div class="trc-time" style="color:#ff9650">Dawn</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-s">×1.50</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-w">×0.75</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-s">×1.10</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-w">×0.90</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(255,230,80,.4)">
           <div class="trc-time" style="color:#ffe650">Day</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-strong">×1.20 ▲ Peak</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-weak">×0.80 ▼ Min</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(180,80,200,.4)">
           <div class="trc-time" style="color:#b450c8">Dusk</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-w">×0.75</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-s">×1.50</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-w">×0.90</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-s">×1.10</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(80,80,200,.4)">
           <div class="trc-time" style="color:#6060e0">Night</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-weak">×0.80 ▼ Min</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-strong">×1.20 ▲ Peak</span></div>
         </div>
       </div>
       <p style="font-size:11px;color:var(--text-dim);margin-top:10px">
@@ -1668,15 +1668,15 @@ const MAIN_MATCHUP = [
 const SUB_MULT = [
 //         Dawn  Day   Dusk  Night
 /* None  */[1.0, 1.0,  1.0,  1.0],
-/* Light */[1.5, 2.0,  0.75, 0.5],
-/* Dark  */[0.75,0.5,  1.5,  2.0],
+/* Light */[1.1, 1.2,  0.9, 0.8],
+/* Dark  */[0.9, 0.8,  1.1,  1.2],
 ];
 
 const TOD_DESCRIPTIONS = {
-  Dawn:  'Dawn — Light ×1.5 | Dark ×0.75',
-  Day:   'Day — Light ×2.0 (max) | Dark ×0.5 (min)',
-  Dusk:  'Dusk — Light ×0.75 | Dark ×1.5',
-  Night: 'Night — Light ×0.5 (min) | Dark ×2.0 (max)',
+  Dawn:  'Dawn — Light ×1.1 | Dark ×0.9',
+  Day:   'Day — Light ×1.2 (max) | Dark ×0.8 (min)',
+  Dusk:  'Dusk — Light ×0.9 | Dark ×1.1',
+  Night: 'Night — Light ×0.8 (min) | Dark ×1.2 (max)',
 };
 
 let currentTod = 'Day';
