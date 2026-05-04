@@ -1125,6 +1125,30 @@ input[type="checkbox"]:checked::after {
 .trc-val.v-weak   { color: var(--red); }
 .trc-val.v-half-s { color: #8ed46a; }
 .trc-val.v-half-w { color: #e08060; }
+
+/* ── CharType Buttons ─────────────────────────────────── */
+.chartype-btn {
+  padding: 7px 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.chartype-btn:hover { background: var(--bg-hover); border-color: var(--border-hi); color: var(--text-prime); }
+
+.chartype-btn.active-Strong    { background: rgba(226,75,74,.15);  border-color: #E24B4A55; color: #E24B4A; }
+.chartype-btn.active-Support   { background: rgba(55,138,221,.15); border-color: #378ADD55; color: #378ADD; }
+.chartype-btn.active-Speed     { background: rgba(29,158,117,.15); border-color: #1D9E7555; color: #1D9E75; }
+.chartype-btn.active-Versatile { background: rgba(239,159,39,.15); border-color: #EF9F2755; color: #EF9F27; }
+
 </style>
 </head>
 <body>
@@ -1191,6 +1215,23 @@ input[type="checkbox"]:checked::after {
           <input type="number" id="a-luk" value="0" min="0" oninput="calcAll()">
         </div>
       </div>
+    </div>
+
+    <div class="card" id="chartype-card">
+      <div class="section-label">Character Type</div>
+      <div id="chartype-badge-row" style="margin-bottom:10px"></div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">
+        Determines which attack formula feeds into damage simulation.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="chartype-btns">
+        <button class="chartype-btn" data-type="Strong"    onclick="setCharType('Strong')"   >Strong — PPOW</button>
+        <button class="chartype-btn" data-type="Support"   onclick="setCharType('Support')"  >Support — MPOW</button>
+        <button class="chartype-btn" data-type="Speed"     onclick="setCharType('Speed')"    >Speed — PPOW+MPOW</button>
+        <button class="chartype-btn" data-type="Versatile" onclick="setCharType('Versatile')">Versatile — PPOW+MPOW</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-dim);margin-top:8px">
+        Note: When a Character JSON is imported, CharType is set automatically from the asset.
+      </p>
     </div>
 
     <div class="card">
@@ -1283,7 +1324,7 @@ input[type="checkbox"]:checked::after {
         <button class="tod-btn tod-night" onclick="setTod('Night')" id="tod-night">Night</button>
       </div>
       <div id="tod-description" style="font-size:12px;color:var(--text-dim);margin-bottom:4px">
-        Day — Light ×1.2 (max) | Dark ×0.8 (min)
+        Day — Light ×2.0 (max) | Dark ×0.5 (min)
       </div>
     </div>
 
@@ -1339,6 +1380,7 @@ input[type="checkbox"]:checked::after {
       <div class="vs-container">
         <div class="vs-side">
           <div class="vs-name" id="sim-p-name">Player</div>
+          <div id="sim-p-type-badge" style="margin-bottom:4px;min-height:18px"></div>
           <div id="sim-p-elem-badge" style="margin-bottom:6px;min-height:18px"><span style="font-size:10px;color:var(--text-dim)">No element</span></div>
           <div class="vs-stat">HP <span id="sim-p-hp">—</span></div>
           <div class="vs-stat">P.ATK <span id="sim-p-ppow">—</span></div>
@@ -1511,23 +1553,23 @@ input[type="checkbox"]:checked::after {
       <div class="tod-ref-grid">
         <div class="tod-ref-cell" style="border-top:2px solid rgba(255,150,80,.4)">
           <div class="trc-time" style="color:#ff9650">Dawn</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-s">×1.10</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-w">×0.90</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-s">×1.50</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-w">×0.75</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(255,230,80,.4)">
           <div class="trc-time" style="color:#ffe650">Day</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-strong">×1.20 ▲ Peak</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-weak">×0.80 ▼ Min</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(180,80,200,.4)">
           <div class="trc-time" style="color:#b450c8">Dusk</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-w">×0.90</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-s">×1.10</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-half-w">×0.75</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-half-s">×1.50</span></div>
         </div>
         <div class="tod-ref-cell" style="border-top:2px solid rgba(80,80,200,.4)">
           <div class="trc-time" style="color:#6060e0">Night</div>
-          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-weak">×0.80 ▼ Min</span></div>
-          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-strong">×1.20 ▲ Peak</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#f5f0a8">Light</span><span class="trc-val v-weak">×0.50 ▼ Min</span></div>
+          <div class="trc-row"><span class="trc-sub" style="color:#a060e0">Dark</span><span class="trc-val v-strong">×2.00 ▲ Peak</span></div>
         </div>
       </div>
       <p style="font-size:11px;color:var(--text-dim);margin-top:10px">
@@ -1591,7 +1633,7 @@ const CFG_DEFAULTS = {
 };
 const CFG_LABELS = {
   ppow_BABonus:  'PPOW / MPOW — BA bonus multiplier',
-  ppow_BDOffset: 'PPOW / MPOW — BA offset multiplier',
+  ppow_BDOffset: 'PPOW / MPOW — BA offset [DEPRECATED — no longer used in formula]',
   maxHp_Vit:     'MAXHP — VIT multiplier',
   def_BD:        'PDEF / MDEF / TDEF — BD multiplier',
   defStats_BD:   'PDEF / MDEF — STR / INT scaling',
@@ -1606,7 +1648,8 @@ const CFG_LABELS = {
 };
 
 let cfg = { ...CFG_DEFAULTS };
-let charData = null;
+let charData   = null;
+let charType   = 'Strong';   // default — overwritten by JSON import or selector
 let bareResult = null, armedResult = null;
 
 /* ── Helpers ───────────────────────────────────────────── */
@@ -1668,15 +1711,15 @@ const MAIN_MATCHUP = [
 const SUB_MULT = [
 //         Dawn  Day   Dusk  Night
 /* None  */[1.0, 1.0,  1.0,  1.0],
-/* Light */[1.1, 1.2,  0.9, 0.8],
-/* Dark  */[0.9, 0.8,  1.1,  1.2],
+/* Light */[1.5, 2.0,  0.75, 0.5],
+/* Dark  */[0.75,0.5,  1.5,  2.0],
 ];
 
 const TOD_DESCRIPTIONS = {
-  Dawn:  'Dawn — Light ×1.1 | Dark ×0.9',
-  Day:   'Day — Light ×1.2 (max) | Dark ×0.8 (min)',
-  Dusk:  'Dusk — Light ×0.9 | Dark ×1.1',
-  Night: 'Night — Light ×0.8 (min) | Dark ×1.2 (max)',
+  Dawn:  'Dawn — Light ×1.5 | Dark ×0.75',
+  Day:   'Day — Light ×2.0 (max) | Dark ×0.5 (min)',
+  Dusk:  'Dusk — Light ×0.75 | Dark ×1.5',
+  Night: 'Night — Light ×0.5 (min) | Dark ×2.0 (max)',
 };
 
 let currentTod = 'Day';
@@ -1781,8 +1824,8 @@ function calcSubStats(stats, data, weaponBA = 0) {
   return {
     BA:    r(ba),
     BD:    r(bd),
-    PPOW:  r((stats.STR + ba * c.ppow_BABonus + ba) + (stats.STR - ba * c.ppow_BDOffset - ba)),
-    MPOW:  r((stats.INT + ba * c.ppow_BABonus + ba) + (stats.INT - ba * c.ppow_BDOffset - ba)),
+    PPOW:  r(stats.STR + ba * c.ppow_BABonus + ba),
+    MPOW:  r(stats.INT + ba * c.ppow_BABonus + ba),
     MAXHP: +((1 + stats.VIT * c.maxHp_Vit) * (data.Base_MAXHP || 100)).toFixed(1),
     PDEF:  r(stats.VIT + bd * c.def_BD + stats.STR * c.defStats_BD),
     MDEF:  r(stats.VIT + bd * c.def_BD + stats.INT * c.defStats_BD),
@@ -1794,10 +1837,52 @@ function calcSubStats(stats, data, weaponBA = 0) {
   };
 }
 
+/* ── CharType Attack Power Resolution ─────────────────── */
+/**
+ * Returns the single effective attack value used in all damage formulas.
+ * Mirrors BattleCalculator.ResolveAttackPower() in C#.
+ *
+ * Strong    → PPOW
+ * Support   → MPOW
+ * Speed     → PPOW + MPOW
+ * Versatile → PPOW + MPOW
+ */
+function resolveAttackPower(type, sub) {
+  const ppow = sub.PPOW || 0;
+  const mpow = sub.MPOW || 0;
+  switch (type) {
+    case 'Strong':    return ppow;
+    case 'Support':   return mpow;
+    case 'Speed':     return ppow + mpow;
+    case 'Versatile': return ppow + mpow;
+    default:          return ppow;
+  }
+}
+
+function getAttackFormulaLabel(type) {
+  switch (type) {
+    case 'Strong':    return 'PPOW (STR-based)';
+    case 'Support':   return 'MPOW (INT-based)';
+    case 'Speed':     return 'PPOW + MPOW (Hybrid)';
+    case 'Versatile': return 'PPOW + MPOW (Hybrid)';
+    default:          return 'PPOW';
+  }
+}
+
+const CHARTYPE_COLORS = {
+  Strong:    '#E24B4A',
+  Support:   '#378ADD',
+  Speed:     '#1D9E75',
+  Versatile: '#EF9F27',
+};
+
 /* ── Main Calculation ──────────────────────────────────── */
 function calcAll() {
   const data  = getBaseData();
   const level = iv('lvl');
+
+  // CharType: from JSON (imported) or manual selector
+  charType = (charData && charData.type) || sv('m-chartype') || 'Strong';
   const { stats: growth, alloPoints: maxAllo } = computeGrowth(data, level);
 
   const allo = {
@@ -1812,7 +1897,9 @@ function calcAll() {
     AGI: growth.AGI + allo.AGI, LUK: growth.LUK + allo.LUK
   };
 
-  bareResult = { main: bare, sub: calcSubStats(bare, data, 0) };
+  const bareSub = calcSubStats(bare, data, 0);
+  const bareEAP = resolveAttackPower(charType, bareSub);
+  bareResult = { main: bare, sub: bareSub, eap: bareEAP, charType };
 
   const wep = getWeaponCtx();
   let armed = { ...bare }, wepBA = 0;
@@ -1824,7 +1911,9 @@ function calcAll() {
     };
     wepBA = wep.BABonus || 0;
   }
-  armedResult = { main: armed, sub: calcSubStats(armed, data, wepBA) };
+  const armedSub = calcSubStats(armed, data, wepBA);
+  const armedEAP = resolveAttackPower(charType, armedSub);
+  armedResult = { main: armed, sub: armedSub, eap: armedEAP, charType };
 
   /* Allo bar */
   const pct = maxAllo > 0 ? Math.min(100, usedAllo / maxAllo * 100) : 0;
@@ -1872,11 +1961,22 @@ function calcAll() {
 function updateSimHeader() {
   if (!armedResult) return;
   const sub  = armedResult.sub;
+  const eap  = armedResult.eap;
+  const ct   = armedResult.charType || 'Strong';
   const name = (charData && charData.name) || 'Character';
+
   el('sim-p-name').textContent  = `Lv.${iv('lvl')} ${name}`;
   el('sim-p-hp').textContent    = sub.MAXHP;
-  el('sim-p-ppow').textContent  = sub.PPOW;
+  // Show Effective ATK (CharType-resolved), not raw PPOW
+  el('sim-p-ppow').textContent  = `${eap.toFixed(1)} (${getAttackFormulaLabel(ct)})`;
   el('sim-p-pdef').textContent  = sub.PDEF;
+
+  // CharType badge in VS player name area
+  const charBadgeEl = el('sim-p-type-badge');
+  if (charBadgeEl) {
+    const col = CHARTYPE_COLORS[ct] || '#888';
+    charBadgeEl.innerHTML = `<span style="font-size:10px;padding:1px 7px;border-radius:20px;border:1px solid;background:${col}22;color:${col};border-color:${col}55;font-family:var(--font-ui);font-weight:700;letter-spacing:.1em;text-transform:uppercase">${ct}</span>`;
+  }
 }
 
 function calcSim() {
@@ -1896,8 +1996,10 @@ function calcSim() {
   const wSubMult  = getSubMult(wSub,  currentTod);
   const eSubMult  = getSubMult(eSub,  currentTod);
 
-  // Player damage (with element)
-  const basePDmg = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  // Player damage — use Effective ATK (CharType-resolved), not raw PPOW
+  // EAP is already stored in armedResult.eap by calcAll()
+  const eap      = armedResult.eap || sub.PPOW;
+  const basePDmg = Math.max(minD, eap - eDEF) * (1 - Math.min(eDR, 0.99));
   const pDmg     = basePDmg * mainMult * wSubMult;
 
   // Enemy damage (sub-element only — player has no main element target)
@@ -2001,6 +2103,11 @@ function importChar(input) {
     try {
       const d = JSON.parse(e.target.result);
       charData = d;
+      // Sync CharType from the imported JSON
+      if (d.type) {
+        charType = d.type;
+        updateCharTypeBadgeUI();
+      }
       el('char-badge').textContent = d.name || 'Loaded';
       el('char-badge').classList.add('loaded');
       el('manual-block').style.opacity = '0.4';
@@ -2061,7 +2168,8 @@ function calcCombo() {
   const mainMult2 = getMainMult(wMain2, eMain2);
   const subMult2  = getSubMult(wSub2,  currentTod);
 
-  const rawBase   = Math.max(minD, sub.PPOW - eDEF) * (1 - Math.min(eDR, 0.99));
+  const eap3      = armedResult ? (armedResult.eap || sub.PPOW) : sub.PPOW;
+  const rawBase   = Math.max(minD, eap3 - eDEF) * (1 - Math.min(eDR, 0.99));
   const baseDmg   = rawBase * mainMult2 * subMult2;
 
   // Combo cap from Settings (cfg.comboMaxMult, default 1.6)
@@ -2121,9 +2229,40 @@ function calcCombo() {
   }
 }
 
+/* ── CharType Selector ─────────────────────────────────── */
+function setCharType(type) {
+  charType = type;
+  updateCharTypeBadgeUI();
+  calcAll();
+}
+
+function updateCharTypeBadgeUI() {
+  // Update button active states
+  document.querySelectorAll('.chartype-btn').forEach(btn => {
+    btn.className = 'chartype-btn';
+    if (btn.dataset.type === charType) btn.classList.add('active-' + charType);
+  });
+
+  // Update badge in card
+  const badgeRow = el('chartype-badge-row');
+  if (!badgeRow) return;
+  const col = CHARTYPE_COLORS[charType] || '#888';
+  const formula = getAttackFormulaLabel(charType);
+  badgeRow.innerHTML = `
+    <span style="font-size:14px;padding:4px 14px;border-radius:20px;border:1px solid;
+                 background:${col}22;color:${col};border-color:${col}55;
+                 font-family:var(--font-ui);font-weight:700;letter-spacing:.1em;text-transform:uppercase">
+      ${charType}
+    </span>
+    <span style="font-size:12px;color:var(--text-dim);margin-left:10px;font-family:var(--font-ui)">
+      Attack formula: ${formula}
+    </span>`;
+}
+
 /* ── Init ──────────────────────────────────────────────── */
 buildCfgFields();
 updateElemBadge();
+updateCharTypeBadgeUI();
 calcAll();
 </script>
 </body>
