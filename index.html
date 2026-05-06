@@ -2350,7 +2350,7 @@ function calcExpSimulation() {
   const expPow  = cfg.charExpExponent ?? 1.65;
 
   function expForLevel(lv) {
-    return Math.round((50 * Math.pow(Math.max(lv, expPow)) / 50) * 50);
+    return Math.round(((50 * (Math.pow(lv, expPow))) / 50) * 50);
   }
 
   // Build per-level data for next 5 levels from current char level
