@@ -1378,8 +1378,8 @@ input[type="checkbox"]:checked::after {
         Determines which attack formula feeds into damage simulation.
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap" id="chartype-btns">
-        <button class="chartype-btn" data-type="Strong"    onclick="setCharType('Strong')"   >Strong — PPOW</button>
-        <button class="chartype-btn" data-type="Support"   onclick="setCharType('Support')"  >Support — MPOW</button>
+        <button class="chartype-btn" data-type="Strong"    onclick="setCharType('Strong')"   >Strong — 2xPPOW</button>
+        <button class="chartype-btn" data-type="Support"   onclick="setCharType('Support')"  >Support — 2xMPOW</button>
         <button class="chartype-btn" data-type="Speed"     onclick="setCharType('Speed')"    >Speed — PPOW+MPOW</button>
         <button class="chartype-btn" data-type="Versatile" onclick="setCharType('Versatile')">Versatile — PPOW+MPOW</button>
       </div>
@@ -2117,8 +2117,8 @@ function calcSubStats(stats, data, weaponBA = 0) {
  * Returns the single effective attack value used in all damage formulas.
  * Mirrors BattleCalculator.ResolveAttackPower() in C#.
  *
- * Strong    → PPOW
- * Support   → MPOW
+ * Strong    → 2 x PPOW
+ * Support   → 2 x MPOW
  * Speed     → PPOW + MPOW
  * Versatile → PPOW + MPOW
  */
@@ -2126,8 +2126,8 @@ function resolveAttackPower(type, sub) {
   const ppow = sub.PPOW || 0;
   const mpow = sub.MPOW || 0;
   switch (type) {
-    case 'Strong':    return ppow;
-    case 'Support':   return mpow;
+    case 'Strong':    return 2 * ppow;
+    case 'Support':   return 2 * mpow;
     case 'Speed':     return ppow + mpow;
     case 'Versatile': return ppow + mpow;
     default:          return ppow;
@@ -2136,8 +2136,8 @@ function resolveAttackPower(type, sub) {
 
 function getAttackFormulaLabel(type) {
   switch (type) {
-    case 'Strong':    return 'PPOW (STR-based)';
-    case 'Support':   return 'MPOW (INT-based)';
+    case 'Strong':    return '2 x PPOW (STR-based)';
+    case 'Support':   return '2 x MPOW (INT-based)';
     case 'Speed':     return 'PPOW + MPOW (Hybrid)';
     case 'Versatile': return 'PPOW + MPOW (Hybrid)';
     default:          return 'PPOW';
