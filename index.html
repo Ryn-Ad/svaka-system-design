@@ -1892,9 +1892,9 @@ const CFG_DEFAULTS = {
   def_BD: 0.001, defStats_BD: 0.010, maxMp_Base: 0.015,
   aspd_Agi: 0.015, cit_Agi: 0.0075, minDmg: 1, comboMult: 0.015, comboMaxMult: 1.6,
   elemStrong: 1.5, elemWeak: 0.75,
-  coef_BA_A: 0.15, coef_BA_B: 1.0,
-  coef_BD_A: 0.10, coef_BD_B: 1.0,
-  coef_HP_A: 0.20, coef_HP_B: 1.0,
+  coef_BA_A: 0.06, coef_BA_B: 0.9,
+  coef_BD_A: 0.04, coef_BD_B: 0.85,
+  coef_HP_A: 0.12, coef_HP_B: 1.1,
   charExpBase: 100, charExpExponent: 1.5
 };
 const CFG_LABELS = {
@@ -2750,12 +2750,12 @@ function scaleEnemy(baseBA, baseDef, baseHP, level, enemyType) {
   const typeMult  = ENEMY_TYPE_MULTS[enemyType] ?? 1.0;
 
   // Pull coefficients from live cfg (so Settings tab changes apply instantly)
-  const coef_BA_A = cfg.coef_BA_A ?? 0.15;
-  const coef_BA_B = cfg.coef_BA_B ?? 1.0;
-  const coef_BD_A = cfg.coef_BD_A ?? 0.10;
-  const coef_BD_B = cfg.coef_BD_B ?? 1.0;
-  const coef_HP_A = cfg.coef_HP_A ?? 0.20;
-  const coef_HP_B = cfg.coef_HP_B ?? 1.0;
+  const coef_BA_A = cfg.coef_BA_A ?? 0.06;
+  const coef_BA_B = cfg.coef_BA_B ?? 0.9;
+  const coef_BD_A = cfg.coef_BD_A ?? 0.04;
+  const coef_BD_B = cfg.coef_BD_B ?? 0.85;
+  const coef_HP_A = cfg.coef_HP_A ?? 0.12;
+  const coef_HP_B = cfg.coef_HP_B ?? 1.1;
 
   const baGrowth  = 1 + coef_BA_A * Math.pow(lvl, coef_BA_B);
   const defGrowth = 1 + coef_BD_A * Math.pow(lvl, coef_BD_B);
