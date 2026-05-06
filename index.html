@@ -1149,6 +1149,159 @@ input[type="checkbox"]:checked::after {
 .chartype-btn.active-Speed     { background: rgba(29,158,117,.15); border-color: #1D9E7555; color: #1D9E75; }
 .chartype-btn.active-Versatile { background: rgba(239,159,39,.15); border-color: #EF9F2755; color: #EF9F27; }
 
+
+/* ── EXP Card ─────────────────────────────────────────── */
+.exp-boxes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.exp-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: center;
+}
+
+.exp-box .exp-box-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.exp-box .exp-box-kills {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.exp-box .exp-box-sub {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.exp-box.box-1 { border-top: 2px solid var(--green-dim); }
+.exp-box.box-1 .exp-box-kills { color: var(--green); }
+.exp-box.box-3 { border-top: 2px solid var(--gold-dim); }
+.exp-box.box-3 .exp-box-kills { color: var(--gold); }
+.exp-box.box-5 { border-top: 2px solid var(--red-dim); }
+.exp-box.box-5 .exp-box-kills { color: var(--red); }
+
+.exp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.exp-row:last-child { border-bottom: none; }
+.exp-row .exp-lv    { font-family: var(--font-ui);  font-size: 12px; font-weight: 600; color: var(--text-mid); min-width: 90px; }
+.exp-row .exp-need  { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); flex: 1; text-align: center; }
+.exp-row .exp-kills { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--text-prime); text-align: right; min-width: 70px; }
+
+
+/* ── Enemy Type Buttons — HUD Theme ──────────────────────── */
+.enemy-type-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.enemy-type-btn {
+  position: relative;
+  padding: 10px 8px 9px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* HUD corner brackets — same design language as .card */
+.enemy-type-btn::before,
+.enemy-type-btn::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-style: solid;
+  opacity: 0;
+  transition: opacity .15s, border-color .15s;
+}
+.enemy-type-btn::before { top: 2px; left: 2px; border-width: 1.5px 0 0 1.5px; border-radius: 2px 0 0 0; }
+.enemy-type-btn::after  { bottom: 2px; right: 2px; border-width: 0 1.5px 1.5px 0; border-radius: 0 0 2px 0; }
+
+.enemy-type-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hi);
+  color: var(--text-prime);
+}
+.enemy-type-btn:hover::before,
+.enemy-type-btn:hover::after { opacity: .6; border-color: var(--border-hi); }
+
+.enemy-type-btn .btn-type-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .16em;
+  color: inherit;
+  margin-bottom: 3px;
+}
+.enemy-type-btn .btn-type-mult {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1;
+}
+
+/* Active states — one per type with its own color identity */
+.enemy-type-btn.active-Small {
+  background: rgba(82,200,120,.12);
+  border-color: rgba(82,200,120,.4);
+  border-top: 2px solid #52c878;
+  color: #52c878;
+}
+.enemy-type-btn.active-Small::before,
+.enemy-type-btn.active-Small::after { opacity: .7; border-color: #52c878; }
+
+.enemy-type-btn.active-Medium {
+  background: rgba(240,192,64,.12);
+  border-color: rgba(240,192,64,.4);
+  border-top: 2px solid #f0c040;
+  color: #f0c040;
+}
+.enemy-type-btn.active-Medium::before,
+.enemy-type-btn.active-Medium::after { opacity: .7; border-color: #f0c040; }
+
+.enemy-type-btn.active-Captain {
+  background: rgba(224,80,80,.14);
+  border-color: rgba(224,80,80,.4);
+  border-top: 2px solid #e05050;
+  color: #e05050;
+}
+.enemy-type-btn.active-Captain::before,
+.enemy-type-btn.active-Captain::after { opacity: .7; border-color: #e05050; }
+
 </style>
 </head>
 <body>
@@ -1169,7 +1322,8 @@ input[type="checkbox"]:checked::after {
     <button class="tab-btn active" onclick="setTab(0)">Character</button>
     <button class="tab-btn" onclick="setTab(1)">Weapon</button>
     <button class="tab-btn" onclick="setTab(2)">Arena</button>
-    <button class="tab-btn" onclick="setTab(3)">Settings</button>
+    <button class="tab-btn" onclick="setTab(3)">Enemy</button>
+    <button class="tab-btn" onclick="setTab(4)">Settings</button>
   </nav>
 
   <!-- ── TAB 0 : CHARACTER ── -->
@@ -1328,76 +1482,17 @@ input[type="checkbox"]:checked::after {
       </div>
     </div>
 
-    <div class="card">
-      <div class="section-label">Enemy Setup</div>
-      <div class="row" style="margin-bottom:14px">
-        <div class="col">
-          <label class="field-label">Enemy Name</label>
-          <input type="text" id="e-name" value="Enemy" oninput="calcSim()">
-        </div>
-        <label class="btn btn-file">
-          Load Enemy JSON
-          <input type="file" accept=".json" onchange="importEnemy(this)">
-        </label>
+    <div class="card" id="arena-enemy-summary">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="section-label" style="margin:0">Active Enemy</div>
+        <button class="btn btn-ghost" onclick="setTab(3)" style="font-size:11px;padding:4px 10px">
+          Edit Enemy →
+        </button>
       </div>
-
-      <div class="section-label">Base Stats (Level 0)</div>
-      <div class="enemy-grid">
-        <div><label class="field-label">Base Max HP</label><input type="number" id="e-hp" value="200" oninput="calcSim()"></div>
-        <div><label class="field-label">Base ATK (BA)</label><input type="number" id="e-atk" value="25" oninput="calcSim()"></div>
-        <div><label class="field-label">Base DEF (BD)</label><input type="number" id="e-def" value="10" oninput="calcSim()"></div>
-        <div><label class="field-label">Dmg Reduction (0–1)</label><input type="number" id="e-dr" value="0" step="0.01" min="0" max="1" oninput="calcSim()"></div>
-      </div>
-
-      <div style="margin-top:12px">
-        <div class="row">
-          <div class="col">
-            <label class="field-label">Enemy Level</label>
-            <div style="display:flex;align-items:center;gap:10px">
-              <input type="range" id="e-level" min="0" max="99" value="1" oninput="el('e-level-out').textContent=this.value;calcSim()" style="flex:1">
-              <span id="e-level-out" style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--amber);min-width:28px">1</span>
-            </div>
-          </div>
-          <div style="width:140px">
-            <label class="field-label">EXP Per Kill</label>
-            <input type="number" id="e-exp" value="50" min="0" oninput="calcSim()">
-          </div>
-        </div>
-
-        <label class="field-label">Enemy Type</label>
-        <div class="enemy-type-btns">
-          <button class="enemy-type-btn active-Small"   data-type="Small"   onclick="setEnemyType('Small')"  >Small ×1.0</button>
-          <button class="enemy-type-btn"                data-type="Medium"  onclick="setEnemyType('Medium')" >Medium ×1.5</button>
-          <button class="enemy-type-btn"                data-type="Captain" onclick="setEnemyType('Captain')">Captain ×2.2</button>
-        </div>
-        <input type="hidden" id="e-type" value="Small">
-
-        <div class="scaled-preview" id="scaled-stats-preview" style="display:none"></div>
-      </div>
-
-      <div style="margin-top:14px">
-        <div class="section-label">Enemy Element</div>
-        <div class="elem-row">
-          <div>
-            <label class="field-label">Main Element</label>
-            <select id="e-main-elem" onchange="calcSim()">
-              <option value="None">None</option>
-              <option value="Fire">Fire</option>
-              <option value="Water">Water</option>
-              <option value="Earth">Earth</option>
-              <option value="Wind">Wind</option>
-              <option value="Thunder">Thunder</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Sub-Element</label>
-            <select id="e-sub-elem" onchange="calcSim()">
-              <option value="None">None</option>
-              <option value="Light">Light</option>
-              <option value="Dark">Dark</option>
-            </select>
-          </div>
-        </div>
+      <div id="arena-enemy-readout" style="margin-top:10px">
+        <p style="font-size:12px;color:var(--text-dim)">
+          Configure an enemy in the <strong>Enemy</strong> tab, then return here to simulate.
+        </p>
       </div>
     </div>
 
@@ -1444,6 +1539,35 @@ input[type="checkbox"]:checked::after {
       </div>
 
       <div class="verdict tie" id="sim-verdict">Load a character to simulate combat.</div>
+    </div>
+
+    <div class="card" id="exp-card" style="display:none">
+      <div class="section-label">EXP Farming — Kills to Level Up</div>
+      <p class="combo-formula-note" id="exp-formula-note" style="margin-bottom:14px">
+        XP formula: floor(100 × level^1.5)
+      </p>
+
+      <div class="exp-boxes">
+        <div class="exp-box box-1">
+          <div class="exp-box-label">Next 1 Level</div>
+          <div class="exp-box-kills" id="exp-k1">—</div>
+          <div class="exp-box-sub" id="exp-exp1">— XP needed</div>
+        </div>
+        <div class="exp-box box-3">
+          <div class="exp-box-label">Next 3 Levels</div>
+          <div class="exp-box-kills" id="exp-k3">—</div>
+          <div class="exp-box-sub" id="exp-exp3">— XP needed</div>
+        </div>
+        <div class="exp-box box-5">
+          <div class="exp-box-label">Next 5 Levels</div>
+          <div class="exp-box-kills" id="exp-k5">—</div>
+          <div class="exp-box-sub" id="exp-exp5">— XP needed</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:6px">Per-Level Breakdown</div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:4px 8px"
+           id="exp-breakdown-table"></div>
     </div>
 
     <div class="card combo-section" id="combo-card">
@@ -1493,8 +1617,114 @@ input[type="checkbox"]:checked::after {
 
   </div>
 
-  <!-- ── TAB 3 : SETTINGS ── -->
+  <!-- ── TAB 3 : ENEMY ── -->
   <div id="panel-3" class="panel">
+
+    <div class="card">
+      <div class="section-label">Enemy Identity</div>
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Enemy Name</label>
+          <input type="text" id="e-name" value="Enemy" oninput="calcSim()">
+        </div>
+        <label class="btn btn-file">
+          Load JSON
+          <input type="file" accept=".json" onchange="importEnemy(this)">
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Base Stats — Level 0</div>
+      <div class="enemy-grid">
+        <div><label class="field-label">Base Max HP</label><input type="number" id="e-hp" value="200" oninput="calcSim()"></div>
+        <div><label class="field-label">Base ATK (BA)</label><input type="number" id="e-atk" value="25" oninput="calcSim()"></div>
+        <div><label class="field-label">Base DEF (BD)</label><input type="number" id="e-def" value="10" oninput="calcSim()"></div>
+        <div><label class="field-label">Dmg Reduction (0–1)</label><input type="number" id="e-dr" value="0" step="0.01" min="0" max="1" oninput="calcSim()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Level & Type</div>
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Enemy Level</label>
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="range" id="e-level" min="0" max="99" value="1"
+                   oninput="el('e-level-out').textContent=this.value;calcSim()" style="flex:1">
+            <span id="e-level-out"
+                  style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--amber);min-width:32px">1</span>
+          </div>
+        </div>
+        <div style="width:140px">
+          <label class="field-label">EXP Per Kill</label>
+          <input type="number" id="e-exp" value="50" min="0" oninput="calcSim()">
+        </div>
+      </div>
+
+      <label class="field-label" style="margin-bottom:8px">Enemy Type</label>
+      <div class="enemy-type-btns">
+        <button class="enemy-type-btn active-Small" data-type="Small"   onclick="setEnemyType('Small')">
+          <span class="btn-type-label">Small</span>
+          <span class="btn-type-mult">×1.0</span>
+        </button>
+        <button class="enemy-type-btn"             data-type="Medium"  onclick="setEnemyType('Medium')">
+          <span class="btn-type-label">Medium</span>
+          <span class="btn-type-mult">×1.5</span>
+        </button>
+        <button class="enemy-type-btn"             data-type="Captain" onclick="setEnemyType('Captain')">
+          <span class="btn-type-label">Captain</span>
+          <span class="btn-type-mult">×2.2</span>
+        </button>
+      </div>
+      <input type="hidden" id="e-type" value="Small">
+
+      <div class="scaled-preview" id="scaled-stats-preview" style="display:none;margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Element</div>
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Main Element</label>
+          <select id="e-main-elem" onchange="calcSim()">
+            <option value="None">None</option>
+            <option value="Fire">Fire</option>
+            <option value="Water">Water</option>
+            <option value="Earth">Earth</option>
+            <option value="Wind">Wind</option>
+            <option value="Thunder">Thunder</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="field-label">Sub-Element</label>
+          <select id="e-sub-elem" onchange="calcSim()">
+            <option value="None">None</option>
+            <option value="Light">Light</option>
+            <option value="Dark">Dark</option>
+          </select>
+        </div>
+      </div>
+      <div id="enemy-elem-badges" style="margin-top:8px;min-height:24px"></div>
+    </div>
+
+    <div class="card" id="enemy-scaled-card" style="display:none">
+      <div class="section-label">Scaled Stats Preview</div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
+        These are the actual values the Arena simulation uses after applying level growth and type multiplier.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="enemy-scaled-grid"></div>
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" onclick="setTab(2)" style="width:100%">
+          ▶ Go to Arena →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── TAB 4 : SETTINGS ── -->
+  <div id="panel-4" class="panel">
 
     <div class="card" style="margin-bottom:16px">
       <div class="section-label">Element Reference — Main Matchup Table</div>
@@ -2000,6 +2230,169 @@ function calcAll() {
   updateSimHeader();
   calcSim();
   calcCombo();
+  calcExpSimulation();
+}
+
+/* ── Arena Helpers ─────────────────────────────────────── */
+
+/** Updates the read-only enemy summary card at top of Arena tab */
+function updateArenaEnemySummary(scaled) {
+  const readout = el('arena-enemy-readout');
+  if (!readout) return;
+
+  const name    = sv('e-name')  || 'Enemy';
+  const eType   = sv('e-type')  || 'Small';
+  const eLvl    = iv('e-level');
+  const eDR     = fv('e-dr');
+  const eMain   = sv('e-main-elem') || 'None';
+  const eSub    = sv('e-sub-elem')  || 'None';
+  const col     = ENEMY_TYPE_COLORS[eType] || '#888';
+
+  const mainBadge = eMain !== 'None'
+    ? `<span class="elem-pill elem-${eMain}" style="font-size:10px;padding:1px 8px">${eMain}</span>` : '';
+  const subBadge  = eSub  !== 'None'
+    ? `<span class="elem-pill sub-${eSub}" style="font-size:10px;padding:1px 8px">${eSub}</span>`   : '';
+
+  readout.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+      <span style="font-family:var(--font-ui);font-size:16px;font-weight:700;color:var(--text-prime)">${name}</span>
+      <span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:${col};
+                   padding:2px 10px;border-radius:20px;border:1px solid ${col}44;background:${col}18">
+        ${eType} · Lv.${eLvl}
+      </span>
+      ${mainBadge} ${subBadge}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+      ${statChip('HP',  scaled ? scaled.ScaledMaxHP : fv('e-hp'),  scaled ? scaled.BaseMaxHP : null)}
+      ${statChip('ATK', scaled ? scaled.ScaledBA    : fv('e-atk'), scaled ? scaled.BaseBA    : null)}
+      ${statChip('DEF', scaled ? scaled.ScaledDef   : fv('e-def'), scaled ? scaled.BaseDef   : null)}
+      ${statChip('EXP', fv('e-exp'), null)}
+    </div>`;
+}
+
+function statChip(label, value, base) {
+  const sub = (base != null && Math.round(base) !== Math.round(value))
+    ? `<div style="font-size:10px;color:var(--text-dim)">base ${Math.round(base)}</div>` : '';
+  return `<div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-sm);
+                       padding:6px 8px;text-align:center">
+    <div style="font-family:var(--font-ui);font-size:10px;font-weight:700;letter-spacing:.1em;
+                color:var(--text-dim);text-transform:uppercase">${label}</div>
+    <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--text-prime)">${value}</div>
+    ${sub}
+  </div>`;
+}
+
+/** Updates the scaled preview card in the Enemy tab */
+function updateScaledPreview(scaled) {
+  const card = el('enemy-scaled-card');
+  const grid = el('enemy-scaled-grid');
+  if (!card || !grid) return;
+
+  if (!scaled) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  const eType = sv('e-type') || 'Small';
+  const col   = ENEMY_TYPE_COLORS[eType] || '#888';
+
+  grid.innerHTML = [
+    ['ATK', scaled.BaseBA,    scaled.ScaledBA,    '#ff6428'],
+    ['DEF', scaled.BaseDef,   scaled.ScaledDef,   '#4a9eff'],
+    ['HP',  scaled.BaseMaxHP, scaled.ScaledMaxHP, '#52c878'],
+  ].map(([label, base, scaled_, color]) => `
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;text-align:center">
+      <div style="font-family:var(--font-ui);font-size:10px;font-weight:700;letter-spacing:.14em;
+                  color:var(--text-dim);text-transform:uppercase;margin-bottom:6px">${label}</div>
+      <div style="font-size:10px;color:var(--text-dim);font-family:var(--font-mono)">${Math.round(base)} base</div>
+      <div style="font-size:8px;color:var(--text-dim)">↓</div>
+      <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:${color}">${scaled_}</div>
+      <div style="font-size:10px;color:${col};font-family:var(--font-ui);font-weight:600;margin-top:2px">
+        ×${(scaled_ / Math.max(base, 0.01)).toFixed(2)}
+      </div>
+    </div>`).join('');
+
+  // Also update the inline preview bar
+  const preview = el('scaled-stats-preview');
+  if (preview) {
+    preview.style.display = 'block';
+    preview.innerHTML = `<span style="color:${col};font-family:var(--font-ui);font-weight:700">${eType} Lv.${scaled.Level} ×${scaled.TypeMultiplier.toFixed(1)}</span>&nbsp;&nbsp;`
+      + `ATK <strong>${scaled.ScaledBA}</strong>&nbsp;`
+      + `DEF <strong>${scaled.ScaledDef}</strong>&nbsp;`
+      + `HP <strong>${scaled.ScaledMaxHP}</strong>`;
+  }
+
+  // Also update enemy element badges
+  const eMain = sv('e-main-elem') || 'None';
+  const eSub  = sv('e-sub-elem')  || 'None';
+  const badges = el('enemy-elem-badges');
+  if (badges) {
+    const mb = eMain !== 'None' ? `<span class="elem-pill elem-${eMain}" style="margin-right:4px">${eMain}</span>` : '';
+    const sb = eSub  !== 'None' ? `<span class="elem-pill sub-${eSub}">${eSub}</span>` : '';
+    badges.innerHTML = (mb || sb) ? (mb + sb) : '<span style="font-size:12px;color:var(--text-dim)">No element</span>';
+  }
+}
+
+/* ── EXP Simulation ─────────────────────────────────────── */
+function calcExpSimulation() {
+  const expCard = el('exp-card');
+  if (!expCard) return;
+
+  const enemyExp = iv('e-exp');
+  const charLv   = iv('lvl');
+
+  if (!armedResult || enemyExp <= 0) {
+    expCard.style.display = 'none';
+    return;
+  }
+  expCard.style.display = 'block';
+
+  // XP curve from cfg
+  const expBase = cfg.charExpBase     ?? 100;
+  const expPow  = cfg.charExpExponent ?? 1.5;
+
+  function expForLevel(lv) {
+    return Math.floor(expBase * Math.pow(Math.max(1, lv), expPow));
+  }
+
+  // Build per-level data for next 5 levels from current char level
+  const perLevel = [];
+  for (let i = 0; i < 5; i++) {
+    const lv  = charLv + 1 + i;
+    const xp  = expForLevel(lv);
+    const k   = Math.ceil(xp / enemyExp);
+    perLevel.push({ from: charLv + i, to: lv, xp, kills: k });
+  }
+
+  const expFor1 = perLevel[0].xp;
+  const expFor3 = perLevel[0].xp + perLevel[1].xp + perLevel[2].xp;
+  const expFor5 = perLevel.reduce((a, b) => a + b.xp, 0);
+
+  const k1 = Math.ceil(expFor1 / enemyExp);
+  const k3 = Math.ceil(expFor3 / enemyExp);
+  const k5 = Math.ceil(expFor5 / enemyExp);
+
+  // Formula note
+  const noteEl = el('exp-formula-note');
+  if (noteEl) noteEl.textContent =
+    `XP formula: floor(${expBase} × level^${expPow.toFixed(1)}) · Enemy gives ${enemyExp} XP/kill`;
+
+  // Summary boxes
+  el('exp-k1').textContent   = k1;
+  el('exp-exp1').textContent = `${expFor1.toLocaleString()} XP needed`;
+  el('exp-k3').textContent   = k3;
+  el('exp-exp3').textContent = `${expFor3.toLocaleString()} XP needed`;
+  el('exp-k5').textContent   = k5;
+  el('exp-exp5').textContent = `${expFor5.toLocaleString()} XP needed`;
+
+  // Per-level breakdown table
+  const tableEl = el('exp-breakdown-table');
+  if (tableEl) {
+    tableEl.innerHTML = perLevel.map(({ from, to, xp, kills }) => `
+      <div class="exp-row">
+        <span class="exp-lv">Lv ${from} → ${to}</span>
+        <span class="exp-need">${xp.toLocaleString()} XP</span>
+        <span class="exp-kills">${kills} kill${kills !== 1 ? 's' : ''}</span>
+      </div>`).join('');
+  }
 }
 
 /* ── Arena ─────────────────────────────────────────────── */
@@ -2025,10 +2418,24 @@ function updateSimHeader() {
 }
 
 function calcSim() {
-  if (!armedResult) { calcCombo(); return; }
+  if (!armedResult) { calcCombo(); calcExpSimulation(); return; }
   const sub  = armedResult.sub;
-  const eHP  = fv('e-hp'), eATK = fv('e-atk'), eDEF = fv('e-def'), eDR = fv('e-dr');
+  const eDR  = fv('e-dr');
   const minD = cfg.minDmg || 1;
+
+  // Apply enemy scaling — always use scaled values for all combat math
+  const eLvl  = iv('e-level');
+  const eType = sv('e-type') || 'Small';
+  scaledEnemy = scaleEnemy(fv('e-atk'), fv('e-def'), fv('e-hp'), eLvl, eType);
+
+  const eHP  = scaledEnemy.ScaledMaxHP;
+  const eATK = scaledEnemy.ScaledBA;
+  const eDEF = scaledEnemy.ScaledDef;
+
+  // Update scaled preview in Enemy tab
+  updateScaledPreview(scaledEnemy);
+  // Update Arena enemy summary card
+  updateArenaEnemySummary(scaledEnemy);
 
   // Element context
   const wep       = getWeaponCtx();
@@ -2083,7 +2490,8 @@ function calcSim() {
     matchupBadge.style.display = 'none';
   }
 
-  // VS side labels + element badges
+  // VS side labels + element badges — show scaled values
+  const eCol = ENEMY_TYPE_COLORS[eType] || '#888';
   el('sim-e-name').textContent = sv('e-name') || 'Enemy';
   el('sim-e-hp').textContent   = eHP;
   el('sim-e-atk').textContent  = eATK;
@@ -2202,8 +2610,12 @@ function calcCombo() {
   if (!armedResult) return;
 
   const sub  = armedResult.sub;
-  const eHP  = fv('e-hp'), eDEF = fv('e-def'), eDR = fv('e-dr');
+  const eDR  = fv('e-dr');
   const minD = cfg.minDmg || 1;
+
+  // Always use scaled enemy values (scaledEnemy is kept in sync by calcSim)
+  const eHP  = scaledEnemy ? scaledEnemy.ScaledMaxHP : fv('e-hp');
+  const eDEF = scaledEnemy ? scaledEnemy.ScaledDef   : fv('e-def');
 
   // Base damage per hit (same as flat sim)
   // Element multipliers (same context as calcSim)
@@ -2303,6 +2715,85 @@ function updateCharTypeBadgeUI() {
     <span style="font-size:12px;color:var(--text-dim);margin-left:10px;font-family:var(--font-ui)">
       Attack formula: ${formula}
     </span>`;
+}
+
+/* ── Enemy Scaling Functions ───────────────────────────── */
+
+const ENEMY_TYPE_MULTS  = { Small: 1.0, Medium: 1.5, Captain: 2.2 };
+const ENEMY_TYPE_COLORS = {
+  Small:   '#52c878',
+  Medium:  '#f0c040',
+  Captain: '#e05050',
+};
+
+/**
+ * Custom rounding matching BattleCalculator.EnemyRound() in C#.
+ * frac > 0.5 → ceil (round up), frac ≤ 0.5 → floor (round down).
+ * NOTE: 0.5 rounds DOWN — this is intentional per design spec.
+ */
+function enemyRound(value) {
+  const frac = value - Math.floor(value);
+  return frac > 0.5 ? Math.ceil(value) : Math.floor(value);
+}
+
+/**
+ * Applies per-level growth and type multiplier to all three enemy stats.
+ * Mirrors BattleCalculator.ScaleEnemy() in C#.
+ *
+ * Formulas:
+ *   scaledBA    = enemyRound( baseBA  * (1 + coef_BA_A * lvl^coef_BA_B) * typeMult )
+ *   scaledDef   = enemyRound( baseDef * (1 + coef_BD_A * lvl^coef_BD_B) * typeMult )
+ *   scaledMaxHP = enemyRound( baseHP  * (1 + coef_HP_A * lvl^coef_HP_B) * typeMult )
+ */
+function scaleEnemy(baseBA, baseDef, baseHP, level, enemyType) {
+  const lvl       = Math.max(0, level);
+  const typeMult  = ENEMY_TYPE_MULTS[enemyType] ?? 1.0;
+
+  // Pull coefficients from live cfg (so Settings tab changes apply instantly)
+  const coef_BA_A = cfg.coef_BA_A ?? 0.15;
+  const coef_BA_B = cfg.coef_BA_B ?? 1.0;
+  const coef_BD_A = cfg.coef_BD_A ?? 0.10;
+  const coef_BD_B = cfg.coef_BD_B ?? 1.0;
+  const coef_HP_A = cfg.coef_HP_A ?? 0.20;
+  const coef_HP_B = cfg.coef_HP_B ?? 1.0;
+
+  const baGrowth  = 1 + coef_BA_A * Math.pow(lvl, coef_BA_B);
+  const defGrowth = 1 + coef_BD_A * Math.pow(lvl, coef_BD_B);
+  const hpGrowth  = 1 + coef_HP_A * Math.pow(lvl, coef_HP_B);
+
+  return {
+    BaseBA:      baseBA,
+    BaseDef:     baseDef,
+    BaseMaxHP:   baseHP,
+    Level:       lvl,
+    Type:        enemyType,
+    TypeMultiplier: typeMult,
+    ScaledBA:    enemyRound(baseBA  * baGrowth  * typeMult),
+    ScaledDef:   enemyRound(baseDef * defGrowth * typeMult),
+    ScaledMaxHP: enemyRound(baseHP  * hpGrowth  * typeMult),
+  };
+}
+
+/**
+ * Handles Enemy Type button selection.
+ * Updates the hidden input, refreshes button active states, and recalculates.
+ */
+function setEnemyType(type) {
+  // Update hidden value that calcSim() reads
+  const hiddenEl = el('e-type');
+  if (hiddenEl) hiddenEl.value = type;
+
+  // Refresh button visual states
+  document.querySelectorAll('.enemy-type-btn').forEach(btn => {
+    // Remove all active-* classes
+    btn.className = btn.className.replace(/\bactive-\w+/g, '').trim();
+    if (btn.dataset.type === type) {
+      btn.classList.add('active-' + type);
+    }
+  });
+
+  // Recalculate with new type
+  calcSim();
 }
 
 /* ── Init ──────────────────────────────────────────────── */
