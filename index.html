@@ -2126,20 +2126,20 @@ function resolveAttackPower(type, sub) {
   const ppow = sub.PPOW || 0;
   const mpow = sub.MPOW || 0;
   switch (type) {
-    case 'Strong':    return 2 * ppow;
-    case 'Support':   return 2 * mpow;
-    case 'Speed':     return ppow + mpow;
-    case 'Versatile': return ppow + mpow;
+    case 'Strong':    return ppow;
+    case 'Support':   return mpow;
+    case 'Speed':     return (ppow + mpow)/2;
+    case 'Versatile': return (ppow + mpow)/2;
     default:          return ppow;
   }
 }
 
 function getAttackFormulaLabel(type) {
   switch (type) {
-    case 'Strong':    return '2 x PPOW (STR-based)';
-    case 'Support':   return '2 x MPOW (INT-based)';
-    case 'Speed':     return 'PPOW + MPOW (Hybrid)';
-    case 'Versatile': return 'PPOW + MPOW (Hybrid)';
+    case 'Strong':    return 'PPOW (STR-based)';
+    case 'Support':   return 'MPOW (INT-based)';
+    case 'Speed':     return '1/2 PPOW + MPOW (Hybrid)';
+    case 'Versatile': return '1/2 PPOW + MPOW (Hybrid)';
     default:          return 'PPOW';
   }
 }
