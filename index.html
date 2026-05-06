@@ -1544,7 +1544,7 @@ input[type="checkbox"]:checked::after {
     <div class="card" id="exp-card" style="display:none">
       <div class="section-label">EXP Farming — Kills to Level Up</div>
       <p class="combo-formula-note" id="exp-formula-note" style="margin-bottom:14px">
-        XP formula: floor(100 × level^1.5)
+        XP formula: round(50 × ((50*level^1.65)/50))
       </p>
 
       <div class="exp-boxes">
@@ -2350,7 +2350,7 @@ function calcExpSimulation() {
   const expPow  = cfg.charExpExponent ?? 1.65;
 
   function expForLevel(lv) {
-    return Math.round(50 * Math.pow(Math.max(lv, expPow) / 50) * expPow);
+    return Math.round((50 * Math.pow(Math.max(lv, expPow)) / 50) * 50);
   }
 
   // Build per-level data for next 5 levels from current char level
@@ -2373,7 +2373,7 @@ function calcExpSimulation() {
   // Formula note
   const noteEl = el('exp-formula-note');
   if (noteEl) noteEl.textContent =
-    `XP formula: floor(${expBase} × level^${expPow.toFixed(1)}) · Enemy gives ${enemyExp} XP/kill`;
+    `XP formula: round(50 × level^${expPow.toFixed(1)}) · Enemy gives ${enemyExp} XP/kill`;
 
   // Summary boxes
   el('exp-k1').textContent   = k1;
