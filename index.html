@@ -1895,7 +1895,7 @@ const CFG_DEFAULTS = {
   coef_BA_A: 0.06, coef_BA_B: 0.9,
   coef_BD_A: 0.04, coef_BD_B: 0.85,
   coef_HP_A: 0.12, coef_HP_B: 1.1,
-  charExpBase: 100, charExpExponent: 1.5
+  charExpBase: 100, charExpExponent: 1.65
 };
 const CFG_LABELS = {
   ppow_BABonus:  'PPOW / MPOW — BA bonus multiplier',
@@ -2347,7 +2347,7 @@ function calcExpSimulation() {
 
   // XP curve from cfg
   const expBase = cfg.charExpBase     ?? 100;
-  const expPow  = cfg.charExpExponent ?? 1.5;
+  const expPow  = cfg.charExpExponent ?? 1.65;
 
   function expForLevel(lv) {
     return Math.floor(expBase * Math.pow(Math.max(1, lv), expPow));
