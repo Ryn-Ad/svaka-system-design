@@ -1378,10 +1378,10 @@ input[type="checkbox"]:checked::after {
         Determines which attack formula feeds into damage simulation.
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap" id="chartype-btns">
-        <button class="chartype-btn" data-type="Strong"    onclick="setCharType('Strong')"   >Strong — 2xPPOW</button>
-        <button class="chartype-btn" data-type="Support"   onclick="setCharType('Support')"  >Support — 2xMPOW</button>
-        <button class="chartype-btn" data-type="Speed"     onclick="setCharType('Speed')"    >Speed — PPOW+MPOW</button>
-        <button class="chartype-btn" data-type="Versatile" onclick="setCharType('Versatile')">Versatile — PPOW+MPOW</button>
+        <button class="chartype-btn" data-type="Strong"    onclick="setCharType('Strong')"   >Strong — PPOW</button>
+        <button class="chartype-btn" data-type="Support"   onclick="setCharType('Support')"  >Support — MPOW</button>
+        <button class="chartype-btn" data-type="Speed"     onclick="setCharType('Speed')"    >Speed — (PPOW+MPOW)/2</button>
+        <button class="chartype-btn" data-type="Versatile" onclick="setCharType('Versatile')">Versatile — (PPOW+MPOW)/2</button>
       </div>
       <p style="font-size:11px;color:var(--text-dim);margin-top:8px">
         Note: When a Character JSON is imported, CharType is set automatically from the asset.
